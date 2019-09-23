@@ -1,0 +1,25 @@
+{
+  "name": "shamify",
+  "version": "0.0.1",
+  "description": "Knock-off Spotify",
+  "main": "dir/js/main.js",
+  "scripts": {
+    "start": "tsc && electron .",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JWOverschot/Shamify.git"
+  },
+  "author": "Jis van Overschot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JWOverschot/Shamify/issues"
+  },
+  "homepage": "https://github.com/JWOverschot/Shamify#readme",
+  "devDependencies": {
+    "electron": "^6.0.10",
+    "typescript": "^3.6.3"
+  }
+}
