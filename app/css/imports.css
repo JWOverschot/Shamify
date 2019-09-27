@@ -1,1 +1,10 @@
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css?family=Chakra+Petch&display=swap');
+@import url('../fonts/DigitalNumbers-Regular_1.otf');
+
+:root {
+    /* Color vars */
+    --white: #EEEEEE;
+    --green: #1DB955;
+    --dark-purple: #282759;
+}
