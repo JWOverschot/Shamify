@@ -64,6 +64,4 @@ typings/
 dir/
 
 # ignore client secret
-# client-keys.*
-
 app/scripts/client-keys.ts
