@@ -4,8 +4,10 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = '3a73ad6d597b4db187e81f5e00d0c94f'; // Your client id
-var client_secret = '78f2cd1ef1b74cb8867408c289a2fa7a'; // Your secret
+var client = require('../../dir/js/client-keys.js');
+
+var client_id = client.id; // Your client id
+var client_secret = client.secret; // Your secret
 var redirect_uri = 'http://127.0.0.1:8888/'; // Your redirect uri
 
 /**
