@@ -62,3 +62,6 @@ typings/
 
 # dir
 dir/
+
+# ignore client secret
+client-keys.*
