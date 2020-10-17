@@ -1,3 +1,10 @@
 body {
-	font-family: 'Chakra Petch', sans-serif;
+    font-family: 'Chakra Petch', sans-serif;
+    color: var(--white);
+    font-size: 18px;
+}
+
+a {
+    color: var(--white);
+    text-decoration: none;
 }

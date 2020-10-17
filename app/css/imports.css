@@ -1,10 +1,18 @@
 /* Import fonts */
 @import url('https://fonts.googleapis.com/css?family=Chakra+Petch&display=swap');
-@import url('../fonts/DigitalNumbers-Regular_1.otf');
+@font-face {
+    font-family: 'Digital Numbers';
+    src: url('../fonts/DigitalNumbers-Regular_1.otf') format('opentype');
+}
 
 :root {
     /* Color vars */
     --white: #EEEEEE;
+    --white-rgb: 238, 238, 238;
+    --black: #000000;
+    --black-rgb: 0, 0, 0;
     --green: #1DB955;
+    --green-rgb: 29, 185, 85;
     --dark-purple: #282759;
+    --dark-purple-rgb: 40, 39, 89;
 }

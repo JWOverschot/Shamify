@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Album</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/imports.css">
+    <link rel="stylesheet" href="../css/album/style.css">
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.progress-bar');
+            const play = document.querySelector('.information-overlay .play');
+            const pause = document.querySelector('.information-overlay .pause');
+            const informationOverlay = document.querySelector('.information-overlay');
+            const informationOverlayImg = document.querySelector('.information-overlay img.cover');
+
+            const startProgressBar = function () {
+                let computedLenghtInformationOverlay = window.getComputedStyle(informationOverlay).getPropertyValue('width');
+                let computedLenghtinformationOverlayImg = window.getComputedStyle(informationOverlayImg).getPropertyValue('width');
+                let ProgressBarFullWith = parseFloat(computedLenghtInformationOverlay.replace("px", "")) - parseFloat(computedLenghtinformationOverlayImg.replace("px", ""));
+
+                let duration = 204;
+                let durationLeft = duration;
+                let computedLenghtProgressBar = window.getComputedStyle(progressBar).getPropertyValue('width');
+                let computedLenghtProgressBarInt = parseFloat(computedLenghtProgressBar.replace("px", ""));
+                let percentageProgressBarInt = Math.round((computedLenghtProgressBarInt / ProgressBarFullWith) * 100);
+
+                if (percentageProgressBarInt != 0) {
+                    durationLeft = duration * ((100 - percentageProgressBarInt) / 100);
+                }
+
+                progressBar.style.transitionDuration = durationLeft + 's';
+                progressBar.style.width = '100%';
+            };
+
+            const pauseProgressBar = function () {
+                progressBar.style.transitionDuration = '0s';
+                progressBar.style.width = window.getComputedStyle(progressBar).getPropertyValue('width');
+            };
+
+
+            play.addEventListener('click', () => {
+                startProgressBar();
+                play.style.display = 'none';
+                pause.style.display = 'initial';
+            });
+            pause.addEventListener('click', () => {
+                pauseProgressBar();
+                play.style.display = 'initial';
+                pause.style.display = 'none';
+            });
+
+
+            const slider = document.querySelector('body header');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.classList.add('active');
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX);
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav class="playlist-list">
+            <a href="#" class="playlist-link">Playlist 1</a>
+            <a href="#" class="playlist-link">Playlist 2</a>
+            <a href="#" class="playlist-link">Playlist 3</a>
+            <a href="#" class="playlist-link">Playlist 4</a>
+            <a href="#" class="playlist-link">Playlist 5</a>
+            <a href="#" class="playlist-link">Playlist 6</a>
+            <a href="#" class="playlist-link">Playlist 7</a>
+            <a href="#" class="playlist-link">Playlist 8</a>
+            <a href="#" class="playlist-link">Playlist 9</a>
+            <a href="#" class="playlist-link">Playlist 10</a>
+            <a href="#" class="playlist-link">Playlist 11</a>
+            <a href="#" class="playlist-link">Playlist 12</a>
+            <a href="#" class="playlist-link">Playlist 13</a>
+            <a href="#" class="playlist-link">Playlist 14</a>
+            <a href="#" class="playlist-link">Playlist 15</a>
+            <a href="#" class="playlist-link">Playlist 16</a>
+            <a href="#" class="playlist-link">Playlist 17</a>
+        </nav>
+    </header>
+    <svg class="svg-filter">
+        <filter id="inset-shadow-play-pause">
+            <!-- Shadow Offset -->
+            <feOffset dx="4" dy="5"></feOffset>
+
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+        <filter id="inset-shadow-next">
+            <!-- Shadow Offset -->
+            <feOffset dx="4" dy="5"></feOffset>
+
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+        <filter id="inset-shadow-back">
+            <!-- Shadow Offset -->
+            <feOffset dx="-3" dy="-5"></feOffset>
+
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+    </svg>
+    <main>
+        <aside>
+            <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+            <div class="info">
+                <span>12 songs</span>
+                <span>43 min</span>
+                <span>2017</span>
+            </div>
+            <h2 class="title">Somke + Mirrors (Deluxe)</h2>
+        </aside>
+        <section class="track-list">
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row">
+                <div class="cover-overlay">
+                    <button class="play">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                        </svg>
+                    </button>
+                    <button class="pause">
+                        <svg>
+                            <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                        </svg>
+                    </button>
+                </div>
+                <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+                <span class="track-title">Beliver</span>
+                <span class="track-artist">Imagine Dragons</span>
+                <span class="track-album">Evolve</span>
+                <span class="track-duration">3:24</span>
+                <span class="track-add-date">2018-06-24</span>
+            </div>
+            <div class="track-row end">
+            </div>
+        </section>
+    </main>
+    <footer>
+        <section class="information-overlay">
+            <section class="controls">
+                <button class="back">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
+                    </svg>
+                </button>
+                <button class="play">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                    </svg>
+                </button>
+                <button class="pause">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                    </svg>
+                </button>
+                <button class="next">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
+                    </svg>
+                </button>
+            </section>
+            <img src="../media/407d32e9fdeffc6bc2217e6969994ec5.jpg" alt="Imagine Dragons - Beliver" class="cover">
+            <div class="overlay-top">
+                <span class="playing-title">Beliver</span>
+                <span class="playing-artist">Imagine Dragons</span>
+            </div>
+            <div class="overlay-bottom">
+                <span class="time">
+                    <span class="elapsed">2:35</span>
+                    <span>/</span>
+                    <span class="remaning-duration">-0:49</span>
+                </span>
+                <button class="suffle">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-shuffle-24px"></use>
+                    </svg>
+                </button>
+                <button class="repeat">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-repeat-24px"></use>
+                    </svg>
+                </button>
+            </div>
+        </section>
+        <section class="progress-bar">
+            <div class="needle">
+                <div class="circle"></div>
+                <div class="triangle-down"></div>
+                <div class="line"></div>
+                <div class="triangle-up"></div>
+                <div class="circle"></div>
+            </div>
+        </section>
+    </footer>
+    <div class="background-image" style="background-image:url('../media/407d32e9fdeffc6bc2217e6969994ec5.jpg');"></div>
+</body>
+
+</html>
