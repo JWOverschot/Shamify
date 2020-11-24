@@ -7,13 +7,22 @@
   <title>Shamify</title>
   <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script src="../scripts/spotify-sdk.js"></script> -->
-  <script src="../scripts/app.js"></script>
+  <!-- <script src="../scripts/app.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.3.1/handlebars.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 </head>
 <body>
+    <a href="/album/0Ikw6ho559687KCPbSjr0K">Smoke + Mirrors</a><br>
+    <a href="/album/33pt9HBdGlAbRGBHQgsZsU">Evolve</a><br>
+    <a href="/album/2wVV49qXJai8kmCb1Czp0p">Beliver</a><br>
+    <a href="/album/39IbE4MVy7oNVgdwRwz6rL">Playlist</a><br>
+
+
     <div class="container">
         <div id="login">
           <h1>This is an example of the Authorization Code flow</h1>
-          <a href="http://127.0.0.1:8888/login" class="btn btn-primary">Log in with Spotify</a>
+          <a href="https://127.0.0.1:8888/login" class="btn btn-primary">Log in with Spotify</a>
         </div>
         <div id="loggedin">
           <div id="user-profile">
@@ -52,73 +61,75 @@
         </dl>
       </script>
   
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.3.1/handlebars.min.js"></script>
+      
       <script>
-        (function() {
-          /**
-           * Obtains parameters from the hash of the URL
-           * @return Object
-           */
-          function getHashParams() {
-            var hashParams = {};
-            var e, r = /([^&;=]+)=?([^&;]*)/g,
-                q = window.location.hash.substring(1);
-            while ( e = r.exec(q)) {
-               hashParams[e[1]] = decodeURIComponent(e[2]);
-            }
-            return hashParams;
-          }
-          var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-              userProfileTemplate = Handlebars.compile(userProfileSource),
-              userProfilePlaceholder = document.getElementById('user-profile');
-          var oauthSource = document.getElementById('oauth-template').innerHTML,
-              oauthTemplate = Handlebars.compile(oauthSource),
-              oauthPlaceholder = document.getElementById('oauth');
-          var params = getHashParams();
-          var access_token = params.access_token,
-              refresh_token = params.refresh_token,
-              error = params.error;
-          if (error) {
-            alert('There was an error during the authentication');
-          } else {
-            if (access_token) {
-              // render oauth info
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-              $.ajax({
-                  url: 'https://api.spotify.com/v1/me',
-                  headers: {
-                    'Authorization': 'Bearer ' + access_token
-                  },
-                  success: function(response) {
-                    userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-                    document.getElementById('login').style.display = 'none';
-                    document.getElementById('loggedin').style.display = 'inital';
-                  }
-              });
-            } else {
-                // render initial screen
-                document.getElementById('login').style.display = 'inital';
-                document.getElementById('loggedin').style.display = 'none';
-            }
-            document.getElementById('obtain-new-token').addEventListener('click', function() {
-              $.ajax({
-                url: '/refresh_token',
-                data: {
-                  'refresh_token': refresh_token
+        $(document).ready(function() {
+            (function() {
+            /**
+             * Obtains parameters from the hash of the URL
+             * @return Object
+             */
+            function getHashParams() {
+                var hashParams = {};
+                var e, r = /([^&;=]+)=?([^&;]*)/g,
+                    q = window.location.href.split('?')[1];
+                while ( e = r.exec(q)) {
+                hashParams[e[1]] = decodeURIComponent(e[2]);
                 }
-              }).done(function(data) {
-                access_token = data.access_token;
+                return hashParams;
+            }
+            var userProfileSource = document.getElementById('user-profile-template').innerHTML,
+                userProfileTemplate = Handlebars.compile(userProfileSource),
+                userProfilePlaceholder = document.getElementById('user-profile');
+            var oauthSource = document.getElementById('oauth-template').innerHTML,
+                oauthTemplate = Handlebars.compile(oauthSource),
+                oauthPlaceholder = document.getElementById('oauth');
+            var params = getHashParams();
+            var access_token = params.access_token,
+                refresh_token = params.refresh_token,
+                error = params.error;
+            if (error) {
+                alert('There was an error during the authentication');
+            } else {
+                if (access_token) {
+                // render oauth info
                 oauthPlaceholder.innerHTML = oauthTemplate({
-                  access_token: access_token,
-                  refresh_token: refresh_token
+                    access_token: access_token,
+                    refresh_token: refresh_token
                 });
-              });
-            }, false);
-          }
-        })();
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: {
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    success: function(response) {
+                        userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                        document.getElementById('login').style.display = 'none';
+                        document.getElementById('loggedin').style.display = 'inital';
+                    }
+                });
+                } else {
+                    // render initial screen
+                    document.getElementById('login').style.display = 'inital';
+                    document.getElementById('loggedin').style.display = 'none';
+                }
+                document.getElementById('obtain-new-token').addEventListener('click', function() {
+                $.ajax({
+                    url: '/refresh_token',
+                    data: {
+                    'refresh_token': refresh_token
+                    }
+                }).done(function(data) {
+                    access_token = data.access_token;
+                    oauthPlaceholder.innerHTML = oauthTemplate({
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                    });
+                });
+                }, false);
+            }
+            })();
+        });
       </script>
 </body>
 </html>

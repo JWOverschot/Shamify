@@ -178,7 +178,7 @@ main section.track-list {
 
 main section.track-list div.track-row {
     display: grid;
-    grid-template-columns: 55px auto auto auto max-content max-content;
+    grid-template-columns: 55px calc(35% - 55px) calc(30% - 55px) calc(25% - 55px) calc(12% - 55px) calc(15% - 55px);
     grid-template-rows: 55px;
     background-color: rgba(var(--white-rgb), .4);
 }
