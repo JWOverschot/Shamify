@@ -1,5 +1,6 @@
 import { Duration, min, Moment } from "moment"
 import moment from 'moment'
+import { DatePrecision } from './api/types/datePrecision'
 
 export class Helpers {
     /**
@@ -17,16 +18,42 @@ export class Helpers {
         return text
     }
 
-    public formatDurationFromMilliseconds = (milliseconds: number): string => {
+    public formatDurationFromMilliseconds = (milliseconds: number, withText: boolean = false): string => {
         let duration = moment.duration(milliseconds, 'milliseconds')
         let hours = Math.floor(duration.asHours())
         let minutes = Math.floor(duration.asMinutes()) - hours * 60
-        let seconds = Math.round(duration.asSeconds()) - minutes * 60
-
+        let seconds = Math.round(duration.asSeconds()) - (minutes * 60 + hours * 3600)
+        let format = ''
+        
         if (hours === 0) {
-            return moment({minute: minutes, second: seconds}).format('m:ss')
+            format = withText ? 'm [min]' : 'm:ss'
         } else {
-            return moment({hour: hours, minute: minutes, second: seconds}).format('h:mm:ss')
+            format = withText ? 'h [hr] m [min]' : 'h:mm:ss'
         }
+        
+        return moment({
+            hour: hours, 
+            minute: minutes, 
+            second: seconds
+        }).format(format)
+    }
+
+    public formatDate = (date: string, datePrecision: DatePrecision): string => {
+        let format
+        switch (datePrecision) {
+            case DatePrecision.day:
+                format = 'DD-MM-YYYY'
+                break
+            case DatePrecision.month:
+                format = 'MM-YYYY'
+                break
+            case DatePrecision.year:
+                format = 'YYYY'
+                break
+            default:
+                format = ''
+                break
+        }
+        return moment(date).format(format)
     }
 }

@@ -8,3 +8,8 @@ a {
     color: var(--white);
     text-decoration: none;
 }
+
+a:hover {
+    color: var(--white);
+    text-decoration: underline;
+}

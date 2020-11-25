@@ -5,6 +5,7 @@ import { Helpers } from './helpers'
 import { ApiProxy } from './api/proxy'
 import { User } from './api/models/User'
 import { Album } from './api/models/Album'
+import { Playlist } from './api/models/Playlist'
 
 const { client } = require('./client-keys')
 const express = require('express')
@@ -60,7 +61,7 @@ exp.get('/login', (req: any, res: any) => {
     res.cookie(stateKey, state)
 
     // your application requests authorization
-    const scope = 'user-read-private user-read-email'
+    const scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative'
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -127,6 +128,21 @@ exp.get('/callback', (req: any, res: any) => {
     }
 })
 
+exp.get('/header', (req: any, res: any) => {
+    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/header.html'))
+    res.send(template)
+})
+
+exp.get('/footer', (req: any, res: any) => {
+    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/footer.html'))
+    res.send(template)
+})
+
+exp.get('/auth', (req: any, res: any) => {
+    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/auth.html'))
+    res.send(template)
+})
+
 exp.get('/album/:id', (req: any, res: any) => {
     let albumId: string = req.params.id
     let template: HTMLDocument
@@ -140,11 +156,9 @@ exp.get('/album/:id', (req: any, res: any) => {
         template = data
 
         compTemplate = hogan.compile(template)
-        console.log(compTemplate)
 
         apiProxy.getAlbum(albumId).then((album: Album | Error) => {
             // Render context to template
-            console.log(album)
             if (!(album instanceof Error)) {
                 res.send(compTemplate.render(album))
             }
@@ -154,8 +168,33 @@ exp.get('/album/:id', (req: any, res: any) => {
     })
 })
 
+exp.get('/playlist/:id', (req: any, res: any) => {
+    let playlistId: string = req.params.id
+    let template: HTMLDocument
+    let compTemplate: any
+
+    // First I want to read the file
+    fs.readFile(path.join(__dirname + '../../../app/pages/playlist/playlist.html'), 'utf8', (err: any, data: any) => {
+        if (err) {
+            throw err;
+        }
+        template = data
+
+        compTemplate = hogan.compile(template)
+
+        apiProxy.getPlaylist(playlistId).then((playlist: Playlist | Error) => {
+            // Render context to template
+            if (!(playlist instanceof Error)) {
+                res.send(compTemplate.render(playlist))
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    })
+})
+
 //TODO: Only add neccesry directories
-exp.use('dir', express.static(path.join(__dirname + '../../../dir')))
+exp.use(express.static(path.join(__dirname + '../../../dir')))
 exp.use(express.static(path.join(__dirname + '../../../app')))
 
 // exp.get('/login', (req: Request, res: any) => {

@@ -9,5 +9,7 @@ export interface TrackSimp {
     duration_ms: number,
     duration: string,
     track_number: number,
-    is_playable: boolean
+    is_playable: boolean,
+    add_date: string,
+    album_name: string
 }

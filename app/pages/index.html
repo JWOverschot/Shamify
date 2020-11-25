@@ -1,28 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Shamify</title>
-  <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shamify</title>
+    <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script src="../scripts/spotify-sdk.js"></script> -->
-  <!-- <script src="../scripts/app.js"></script> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.3.1/handlebars.min.js"></script>
+    <!-- <script src="../scripts/app.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.3.1/handlebars.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="./css/main.css"> -->
+    <!-- <link rel="stylesheet" href="./css/imports.css"> -->
+    <!-- <link rel="stylesheet" href="./css/album/style.css"> -->
+
+    <script src="./js/view/templater.js"></script>
 </head>
+
 <body>
-    <a href="/album/0Ikw6ho559687KCPbSjr0K">Smoke + Mirrors</a><br>
-    <a href="/album/33pt9HBdGlAbRGBHQgsZsU">Evolve</a><br>
-    <a href="/album/2wVV49qXJai8kmCb1Czp0p">Beliver</a><br>
-    <a href="/album/39IbE4MVy7oNVgdwRwz6rL">Playlist</a><br>
+    <header id="main-header"></header>
+    <svg class="svg-filter">
+        <filter id="inset-shadow-play-pause">
+            <!-- Shadow Offset -->
+            <feOffset dx="4" dy="5"></feOffset>
 
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
 
-    <div class="container">
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+        <filter id="inset-shadow-next">
+            <!-- Shadow Offset -->
+            <feOffset dx="4" dy="5"></feOffset>
+
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+        <filter id="inset-shadow-back">
+            <!-- Shadow Offset -->
+            <feOffset dx="-3" dy="-5"></feOffset>
+
+            <!-- Shadow Blur -->
+            <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+            <!-- Invert the drop shadow to create an inner shadow -->
+            <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+            </feComposite>
+
+            <!-- Color & Opacity -->
+            <feFlood flood-color="black" flood-opacity=".5" result="color"></feFlood>
+
+            <!-- Clip color inside shadow -->
+            <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+            <!-- Put shadow over original object -->
+            <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+        </filter>
+    </svg>
+    <main id="main-main"></main>
+    <footer id="main-footer"></footer>
+
+    <!-- <div class="container">
         <div id="login">
           <h1>This is an example of the Authorization Code flow</h1>
-          <a href="https://127.0.0.1:8888/login" class="btn btn-primary">Log in with Spotify</a>
+          
         </div>
         <div id="loggedin">
           <div id="user-profile">
@@ -130,6 +197,7 @@
             }
             })();
         });
-      </script>
+      </script> -->
 </body>
+
 </html>

@@ -1,9 +1,13 @@
 const request = require('request')
+const fetch = require("node-fetch")
 import { Album } from './models/Album'
 import { User } from './models/User'
 import { TrackSimp } from './models/TrackSimp'
 import moment from 'moment'
 import { Helpers } from '../helpers'
+import { Playlist } from './models/Playlist'
+import { TrackPlaylist } from './models/TrackPlaylist'
+import { DatePrecision } from './types/datePrecision'
 
 export class ApiProxy {
     private access_token: string
@@ -68,16 +72,58 @@ export class ApiProxy {
                 if (error) {
                     reject(error)
                 } else {
+                    body.release_date = this.helpers.formatDate(body.release_date, body.release_date_precision)
+
                     let tracks: Array<TrackSimp> = body.tracks.items
+                    let albumDurationMs = 0
 
                     tracks.forEach(track => {
                         track.duration = this.helpers.formatDurationFromMilliseconds(track.duration_ms)
-                    });
+                        track.add_date = body.release_date
+                        track.album_name = body.name
+                        albumDurationMs += track.duration_ms
+                    })
                     body.tracks.items = tracks
+                    body.duration = this.helpers.formatDurationFromMilliseconds(albumDurationMs, true)
 
                     resolve(body)
                 }
             })
+        })
+    }
+
+    public getPlaylist = async (id: string): Promise<Playlist | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'playlists/' + id , {
+            method: 'GET',
+            headers:  { 
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.json()
+        }).then((data: Playlist) => {
+            let tracks: Array<TrackPlaylist> = data.tracks.items
+            let playlistDurationMs = 0
+
+            tracks.forEach(track => {
+                track.track.duration = this.helpers.formatDurationFromMilliseconds(track.track.duration_ms)
+                track.added_at = this.helpers.formatDate(track.added_at, DatePrecision.day)
+                track.track.add_date = track.added_at
+                playlistDurationMs += track.track.duration_ms
+            })
+
+            data.tracks.items = tracks
+            data.duration = this.helpers.formatDurationFromMilliseconds(playlistDurationMs, true)
+            data.total_tracks = data.tracks.total
+
+            return data
         })
     }
 }
