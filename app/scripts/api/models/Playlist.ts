@@ -6,10 +6,9 @@ export interface Playlist {
     id: string,
     name: string,
     description: string,
-    tracks: Paging
+    tracks: Paging,
     images: Array<image>,
     snapshot_id: string,
-    total_tracks: number,
-    duration: string,
-    owner: User
+    owner: User,
+    type: string
 }

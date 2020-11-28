@@ -25,7 +25,9 @@
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "custom-electron-titlebar": "^3.2.5",
     "electron-store": "^6.0.1",
+    "electron-window-state": "^5.0.3",
     "express": "^4.17.1",
     "hogan.js": "^3.0.2",
     "jquery": "^3.5.1",

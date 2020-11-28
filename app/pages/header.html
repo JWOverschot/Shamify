@@ -1,3 +1,6 @@
 <nav class="playlist-list">
-    <a href="#" class="playlist-link">Playlist</a>
+    <a href="/playlist" class="playlist-link" title="Liked Songs">Liked Songs</a>
+    {{#items}}
+        <a href="/{{type}}/{{id}}" class="playlist-link" title="{{name}}">{{name}}</a>
+    {{/items}}
 </nav>

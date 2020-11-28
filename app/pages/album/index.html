@@ -1,12 +1,9 @@
-<link rel="stylesheet" href="../../css/main.css">
-<link rel="stylesheet" href="../../css/imports.css">
-<link rel="stylesheet" href="../../css/album/style.css">
 <aside>
     <img src="{{images.0.url}}" alt="{{name}} cover" class="cover">
     <div class="info">
-        <span title="{{total_tracks}} songs">{{total_tracks}}</span>
-        <span title="{{duration}}">{{duration}}</span>
-        <span title="Released on {{release_date}}">{{release_date}}</span>
+        <span title="{{getTotalTracks}} songs">{{getTotalTracks}} racks</span>
+        <span title="{{getTotalDuration}}">{{getTotalDuration}}</span>
+        <span title="Released on {{getFormattedReleaseDate}}">{{getFormattedReleaseDate}}</span>
     </div>
     <h2 class="title" title="{{name}}">{{name}}</h2>
 </aside>
@@ -25,9 +22,9 @@
                 </svg>
             </button>
         </div>
-        <img src="{{images.0.url}}" alt="" class="cover">
+        <img src="{{images.0.url}}" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'" alt="" class="cover">
         <span class="track-title" title="Title: {{name}}">{{name}}</span>
-        <span class="track-artist">{{#artists}}<a href="#" title="{{name}}">{{name}}</a> {{/artists}}</span>
+        <span class="track-artist">{{#artists}}<a href="/{{type}}/{{id}}" title="Artist: {{name}}">{{name}}</a> {{/artists}}</span>
         <span class="track-album" title="Album: {{album_name}}"><a href="#">{{album_name}}</a></span>
         <span class="track-duration" title="Duration: {{duration}}">{{duration}}</span>
         <span class="track-add-date" title="Date Added: {{add_date}}">{{add_date}}</span>

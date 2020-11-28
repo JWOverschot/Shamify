@@ -21,16 +21,16 @@
             </svg>
         </button>
     </section>
-    <img src="" alt="" class="cover">
+    <img src="{{item.album.images.0.url}}" alt="" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'" class="cover">
     <div class="overlay-top">
-        <span class="playing-title"></span>
-        <span class="playing-artist"></span>
+        <span class="playing-title" title="Title: {{item.name}}"><a href="/{{item.album.type}}/{{item.album.id}}">{{item.name}}</a></span>
+        <span class="playing-artist">{{#item.artists}}<a href="#" title="Artist: {{name}}">{{name}}</a> {{/item.artists}}</span>
     </div>
     <div class="overlay-bottom">
         <span class="time">
-            <span class="elapsed">2:35</span>
+            <span class="elapsed">{{getFormattedProgress}}</span>
             <span>/</span>
-            <span class="remaning-duration">-0:49</span>
+            <span class="remaning-duration">{{getFormattedTimeRemeing}}</span>
         </span>
         <button class="suffle">
             <svg>

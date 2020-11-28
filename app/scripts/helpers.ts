@@ -20,20 +20,46 @@ export class Helpers {
 
     public formatDurationFromMilliseconds = (milliseconds: number, withText: boolean = false): string => {
         let duration = moment.duration(milliseconds, 'milliseconds')
-        let hours = Math.floor(duration.asHours())
-        let minutes = Math.floor(duration.asMinutes()) - hours * 60
-        let seconds = Math.round(duration.asSeconds()) - (minutes * 60 + hours * 3600)
+        let days = Math.floor(duration.asDays())
+        let hours = Math.floor(duration.asHours()) - days * 24
+        let minutes = Math.floor(duration.asMinutes()) - ((hours * 60) + (days * 1440))
+        let seconds = Math.round(duration.asSeconds()) - ((minutes * 60) + (hours * 3600) + (days * 86400))
         let format = ''
-        
+
+        if (seconds === 60) {
+            seconds = 0
+            minutes++
+        }
+        if (minutes === 60) {
+            minutes = 0
+            hours++
+        }
+        if (hours === 24) {
+            hours = 0
+            days++
+        }
+        if (days > 31) {
+            days = 31
+        }
+
         if (hours === 0) {
             format = withText ? 'm [min]' : 'm:ss'
+        } else if (days === 31) {
+            format = '[+]31 [days]'
+        } else if (days === 1) {
+            format = 'D [day] H [hr]'
+        } else if (days > 1) {
+            format = 'D [days] H [hr]'
+        } else if (minutes === 0) {
+            format = withText ? 'H [hr]' : 'H:mm:ss'
         } else {
-            format = withText ? 'h [hr] m [min]' : 'h:mm:ss'
+            format = withText ? 'H [hr] m [min]' : 'H:mm:ss'
         }
-        
+
         return moment({
-            hour: hours, 
-            minute: minutes, 
+            day: days || 1,
+            hour: hours,
+            minute: minutes,
             second: seconds
         }).format(format)
     }

@@ -13,5 +13,5 @@ export interface Album {
     release_date_precision: DatePrecision,
     total_tracks: number,
     tracks: Paging,
-    duration: string
+    type: string
 }

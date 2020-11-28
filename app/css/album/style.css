@@ -22,13 +22,20 @@
 }
 
 body {
+    margin: 0;
+    background-color: black;
+}
+
+body div.container-after-titlebar {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 65px calc(100% - (65px + 250px)) 250px;
-    margin: 0;
+    grid-template-rows: 65px calc(100% - (65px + (30px + 250px))) calc(30px + 250px);
+    margin-top: 30px;
     height: 100vh;
-    overflow: hidden;
-    background-color: black;
+    overflow: hidden !important;
+    
+    position: initial !important;
+    inset: 0 !important;
 }
 
 p, h1, h2, h3, h4, h5, h6, span {
@@ -58,46 +65,6 @@ button:focus {
 button svg {
     width: 24px;
     height: 24px;
-}
-
-header {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    background-color: rgba(var(--black-rgb), .6);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(5px);
-    position: relative;
-    z-index: 500;
-    display: flex;
-    overflow-x: scroll;
-    cursor: grab;
-}
-
-header:active {
-    cursor: grabbing;
-}
-
-header:active nav.playlist-list a {
-    cursor: grabbing;
-}
-
-header nav.playlist-list {
-    padding-left: 20px;
-    padding-right: 20px;
-    align-self: center;
-    position: absolute;
-    width: max-content;
-}
-
-header nav.playlist-list a.playlist-link {
-    font-weight: 500;
-    font-size: 18px;
-    margin-right: 35px;
-}
-
-header nav.playlist-list a.playlist-link:last-child {
-    margin-right: 0px;
 }
 
 main {
@@ -169,6 +136,8 @@ main section.track-list {
     grid-row-end: 4;
     display: grid;
     grid-template-columns: auto;
+    /* Breaks by more than ±1000 rows */
+    /* Mabey use a table */
     grid-template-rows: repeat(auto-fill, 55px);
     row-gap: 10px;
     overflow: auto;
@@ -253,221 +222,6 @@ main section.track-list div.track-row span.track-add-date {
     text-align: end;
 }
 
-footer {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    background-color: rgba(var(--white-rgb), .4);
-    box-shadow: 0px -5px 8px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-
-    display: grid;
-    grid-template-columns: 250px auto;
-    position: relative;
-    z-index: 500;
-}
-
-footer section.information-overlay {
-    grid-column-start: 1;
-    grid-column-end: 3;
-
-    display: grid;
-    grid-template-columns: 250px auto;
-    grid-template-rows: 50% 50%;
-    column-gap: 17px;
-}
-
-footer section.information-overlay section.controls {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 3;
-
-    background-color: rgba(var(--black-rgb), .5);
-    position: relative;
-    z-index: 2;
-    display: flex;
-    opacity: 0;
-    transition-delay: 10ms;
-    transition-duration: .3s;
-    transition-timing-function: ease-in-out;
-}
-
-footer section.information-overlay section.controls:hover {
-    opacity: 1;
-}
-
-
-footer section.information-overlay section.controls button {
-    align-self: center;
-}
-
-footer section.information-overlay section.controls button.back,
-footer section.information-overlay section.controls button.next {
-    height: 88px;
-    width: 88px;
-    margin: 0 -7px;
-}
-
-footer section.information-overlay section.controls button.back {
-    transform: rotate(180deg);
-}
-
-footer section.information-overlay section.controls button.pause {
-    display: none;
-}
-
-footer section.information-overlay section.controls button.play,
-footer section.information-overlay section.controls button.pause {
-    width: 150px;
-    height: 150px;
-    margin: 0 -25px;
-}
-
-footer section.information-overlay section.controls button.back svg,
-footer section.information-overlay section.controls button.next svg {
-    height: 88px;
-    width: 88px;
-}
-
-footer section.information-overlay section.controls button.back svg {
-    filter: url(#inset-shadow-back);
-}
-
-footer section.information-overlay section.controls button.next svg {
-    filter: url(#inset-shadow-next);
-}
-
-footer section.information-overlay section.controls button.play svg,
-footer section.information-overlay section.controls button.pause svg {
-    width: 150px;
-    height: 150px;
-    filter: url(#inset-shadow-play-pause);
-}
-
-footer section.information-overlay img.cover {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 3;
-    
-    height: 250px;
-    width: 250px;
-    filter: drop-shadow(5px 0px 10px rgba(0, 0, 0, 0.3));
-}
-
-footer section.information-overlay div.overlay-top {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 50% 50%;
-}
-
-footer section.information-overlay div.overlay-top span {
-    align-self: center;
-}
-
-footer section.information-overlay div.overlay-top span.playing-title {
-    font-size: 36px;
-    display: block;
-}
-
-footer section.information-overlay div.overlay-top span.playing-artist {
-    font-size: 30px;
-    display: block;
-}
-
-
-footer section.information-overlay div.overlay-bottom {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    align-self: center;
-}
-
-footer section.information-overlay div.overlay-bottom span.time {
-    font-family: 'Digital Numbers';
-    font-size: 25px;
-}
-
-footer section.information-overlay div.overlay-bottom button {
-    vertical-align: text-bottom;
-}
-
-footer section.information-overlay div.overlay-bottom button.active {
-    fill: var(--green);
-}
-
-footer section.progress-bar {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    
-    background-color: rgba(var(--dark-purple-rgb), .6);
-    position: absolute;
-    height: 100%;
-    width: 0%;
-    z-index: -100;
-    transition-property: width;
-    transition-timing-function: linear;
-    transition-duration: 0s;
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-}
-
-footer section.progress-bar .needle {
-    height: calc(100% + 10px);
-    width: 2px;
-    display: flex;
-    flex-direction: column;
-    margin-top: -5px;
-    margin-bottom: -5px;
-    padding-left: 100%;
-}
-
-footer section.progress-bar .needle div {
-    align-self: center;
-}
-
-footer section.progress-bar .needle .triangle-down {
-    width: 0; 
-    height: 0; 
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 8px solid var(--black);
-    margin-top: -2px;
-}
-
-footer section.progress-bar .needle .triangle-up {
-    width: 0; 
-    height: 0; 
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-bottom: 8px solid var(--black);
-    margin-bottom: -2px;
-}
-
-footer section.progress-bar .needle .line {
-    width: 4px;
-    height: calc(100% - 25px);
-    background-color: var(--black);
-    margin-top: -4px;
-    margin-bottom: -4px;
-}
-
-footer section.progress-bar .needle .circle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--black);
-}
-
 div.background-image {
     filter: blur(25px);
     opacity: 0.5;
@@ -493,6 +247,7 @@ div.background-image {
         grid-template-columns: 225px auto;
         grid-template-rows: 225px auto;
         background: none;
+        backdrop-filter: none;
     }
     main section.track-list {
         grid-column-start: 2;

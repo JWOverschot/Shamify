@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+import { app, BrowserWindow, globalShortcut } from 'electron'
 import * as querystring from 'querystring'
 import { IncomingHttpHeaders, ServerResponse } from 'http'
 import { Helpers } from './helpers'
@@ -6,6 +6,13 @@ import { ApiProxy } from './api/proxy'
 import { User } from './api/models/User'
 import { Album } from './api/models/Album'
 import { Playlist } from './api/models/Playlist'
+import windowStateKeeper from 'electron-window-state'
+import { AlbumTemplate } from './template/models/Album'
+import { PlaylistTemplate } from './template/models/Playlist'
+import { HeaderTemplate } from './template/models/Header'
+import { FooterTemplate } from './template/models/Footer'
+import { Paging } from './api/types/paging'
+import { platform } from 'custom-electron-titlebar/lib/common/platform'
 
 const { client } = require('./client-keys')
 const express = require('express')
@@ -53,7 +60,12 @@ exp.use(express.static(base_uri))
     .use(cookieParser())
 
 exp.get('/', (req: any, res: any) => {
-    res.sendFile(path.join(__dirname + '../../../app/pages/index.html'))
+    if (store.get('access_token')) {
+        apiProxy = new ApiProxy(store.get('access_token'))
+        res.sendFile(path.join(__dirname + '../../../app/pages/index.html'))   
+    } else {
+        res.redirect('/login')
+    }
 })
 
 exp.get('/login', (req: any, res: any) => {
@@ -61,7 +73,7 @@ exp.get('/login', (req: any, res: any) => {
     res.cookie(stateKey, state)
 
     // your application requests authorization
-    const scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative'
+    const scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-playback-state user-library-read'
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -128,22 +140,58 @@ exp.get('/callback', (req: any, res: any) => {
     }
 })
 
-exp.get('/header', (req: any, res: any) => {
-    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/header.html'))
-    res.send(template)
+exp.get('/pages/header', (req: any, res: any) => {
+    let template: HTMLDocument
+
+    fs.readFile(path.join(__dirname + '../../../app/pages/header.html'), 'utf8', (err: any, data: any) => {
+        if (err) {
+            throw err;
+        }
+        template = data
+
+        let compTemplate = hogan.compile(template)
+
+        apiProxy.getUserPlaylists().then((playlistArray) => {
+            // Render context to template
+            if (!(playlistArray instanceof Error)) {
+                let headerObject = new HeaderTemplate(playlistArray)
+                res.send(compTemplate.render(headerObject))
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    })
 })
 
-exp.get('/footer', (req: any, res: any) => {
-    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/footer.html'))
-    res.send(template)
+exp.get('/pages/footer', async (req: any, res: any) => {
+    let template: HTMLDocument
+
+    fs.readFile(path.join(__dirname + '../../../app/pages/footer.html'), 'utf8', (err: any, data: any) => {
+        if (err) {
+            throw err;
+        }
+        template = data
+
+        let compTemplate = hogan.compile(template)
+
+        apiProxy.getPlayer().then((player) => {
+            // Render context to template
+            if (!(player instanceof Error)) {
+                let footerObject: FooterTemplate = new FooterTemplate(player)
+                res.send(compTemplate.render(footerObject))
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    })
 })
 
-exp.get('/auth', (req: any, res: any) => {
+exp.get('/pages/auth', (req: any, res: any) => {
     let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/auth.html'))
     res.send(template)
 })
 
-exp.get('/album/:id', (req: any, res: any) => {
+exp.get('/pages/album/:id', (req: any, res: any) => {
     let albumId: string = req.params.id
     let template: HTMLDocument
     let compTemplate: any
@@ -160,7 +208,8 @@ exp.get('/album/:id', (req: any, res: any) => {
         apiProxy.getAlbum(albumId).then((album: Album | Error) => {
             // Render context to template
             if (!(album instanceof Error)) {
-                res.send(compTemplate.render(album))
+                let albumObject: AlbumTemplate = new AlbumTemplate(album)
+                res.send(compTemplate.render(albumObject))
             }
         }).catch(err => {
             console.error(err)
@@ -168,7 +217,7 @@ exp.get('/album/:id', (req: any, res: any) => {
     })
 })
 
-exp.get('/playlist/:id', (req: any, res: any) => {
+exp.get('/pages/playlist/:id', (req: any, res: any) => {
     let playlistId: string = req.params.id
     let template: HTMLDocument
     let compTemplate: any
@@ -185,7 +234,40 @@ exp.get('/playlist/:id', (req: any, res: any) => {
         apiProxy.getPlaylist(playlistId).then((playlist: Playlist | Error) => {
             // Render context to template
             if (!(playlist instanceof Error)) {
-                res.send(compTemplate.render(playlist))
+                let playlistObject: PlaylistTemplate = new PlaylistTemplate(playlist)
+                res.send(compTemplate.render(playlistObject))
+            }
+        }).catch(err => {
+            console.error(err)
+        })
+    })
+})
+
+exp.get('/pages/playlist', (req: any, res: any) => {
+    let template: HTMLDocument
+    let compTemplate: any
+
+    // First I want to read the file
+    fs.readFile(path.join(__dirname + '../../../app/pages/playlist/playlist.html'), 'utf8', (err: any, data: any) => {
+        if (err) {
+            throw err;
+        }
+        template = data
+
+        compTemplate = hogan.compile(template)
+
+        apiProxy.getSavedSongs().then((paging: Paging | Error) => {
+            // Render context to template
+            if (!(paging instanceof Error)) {
+                let PlaylistObject: PlaylistTemplate = new PlaylistTemplate()
+                PlaylistObject.description = 'Your liked songs'
+                PlaylistObject.name = 'Liked Songs'
+                //TODO: Change owner to logged in user
+                //PlaylistObject.owner
+                PlaylistObject.tracks = paging
+                
+                
+                res.send(compTemplate.render(PlaylistObject))
             }
         }).catch(err => {
             console.error(err)
@@ -236,21 +318,38 @@ server.listen(8888)
 // }
 
 function createWindow() {
+    const mainWindowStateKeeper = windowStateKeeper({
+        defaultHeight: 1100,
+        defaultWidth: 1920
+    });
     // Create the browser window.
-    let win = new BrowserWindow({
-        width: 1920,
-        height: 1080,
+    let win: BrowserWindow | null = new BrowserWindow({
+        x: mainWindowStateKeeper.x,
+        y: mainWindowStateKeeper.y,
+        height: mainWindowStateKeeper.height,
+        width: mainWindowStateKeeper.width,
         webPreferences: {
             nodeIntegration: true,
             plugins: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            preload: path.join(__dirname + '../../../dir/js/titleBar.js'),
         },
+        frame: false
     })
+    mainWindowStateKeeper.manage(win)
 
     // and load the index.html of the app.
     //win.loadFile('./app/pages/index.html')
     win.loadURL(base_uri)
 
+
+    win.on('closed', function () {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        win = null
+        app.exit()
+    })
     // const scope = 'user-read-private user-read-email'
     // const state = generateRandomString(16)
     // const authUrl: string = (`https://accounts.spotify.com/authorize?${
@@ -307,6 +406,28 @@ function createWindow() {
     // win.on('closed', function () {
     // 	win = null
     // })
+    return win
 }
 
 app.on('ready', createWindow)
+
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('browser-window-focus', function () {
+    globalShortcut.register("CommandOrControl+R", () => {
+        console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+    });
+    globalShortcut.register("F5", () => {
+        console.log("F5 is pressed: Shortcut Disabled");
+    });
+});
+
+app.on('browser-window-blur', function () {
+    globalShortcut.unregister('CommandOrControl+R');
+    globalShortcut.unregister('F5');
+});

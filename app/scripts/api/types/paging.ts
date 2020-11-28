@@ -1,10 +1,8 @@
-import { TrackSimp } from "../models/TrackSimp";
-
 export interface Paging {
     items: Array<any>,
     limit: number,
-    next: string,
+    next: string | null,
     offset: number,
-    previous: string,
+    previous: string | null,
     total: number
 }
