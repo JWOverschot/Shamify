@@ -3,7 +3,6 @@ const fetch = require("node-fetch")
 import { Album } from './models/Album'
 import { User } from './models/User'
 import { TrackSimp } from './models/TrackSimp'
-import moment, { relativeTimeRounding } from 'moment'
 import { Helpers } from '../helpers'
 import { Playlist } from './models/Playlist'
 import { TrackPlaylist } from './models/TrackPlaylist'
@@ -11,7 +10,10 @@ import { DatePrecision } from './types/datePrecision'
 import { Track } from './models/Track'
 import { Paging } from './types/paging'
 import { Player } from './models/Player'
-import { combinedDisposable } from 'custom-electron-titlebar/lib/common/lifecycle'
+import { PlayState } from './types/playState'
+import { PlayDirection } from './types/playDirection'
+import { CurrentlyPlaying } from './models/CurrentlyPlaying'
+import { RepeatState } from './types/repeatState'
 
 export class ApiProxy {
     //TODO: Remove parsing logic from api calls
@@ -105,9 +107,9 @@ export class ApiProxy {
             }
         }
 
-        return await fetch(this.apiURI + 'playlists/' + id , {
+        return await fetch(this.apiURI + 'playlists/' + id, {
             method: 'GET',
-            headers:  { 
+            headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
             }
@@ -135,7 +137,7 @@ export class ApiProxy {
                 //playlistDurationMs += track.track.duration_ms
             })
 
-            //data.tracks.items = tracks
+            data.tracks.items = tracks
             //data.duration = this.helpers.formatDurationFromMilliseconds(playlistDurationMs, true)
             //data.total_tracks = data.tracks.total
 
@@ -147,7 +149,7 @@ export class ApiProxy {
         //https://api.spotify.com/v1/playlists/39IbE4MVy7oNVgdwRwz6rL/tracks?offset=100&limit=100
         return await fetch(url, {
             method: 'GET',
-            headers:  { 
+            headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
             }
@@ -168,7 +170,7 @@ export class ApiProxy {
 
         return await fetch(this.apiURI + 'me/player', {
             method: 'GET',
-            headers:  { 
+            headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
             }
@@ -195,7 +197,7 @@ export class ApiProxy {
 
         return await fetch(this.apiURI + 'me/playlists', {
             method: 'GET',
-            headers:  { 
+            headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
             }
@@ -216,7 +218,7 @@ export class ApiProxy {
 
         return await fetch(this.apiURI + 'me/tracks', {
             method: 'GET',
-            headers:  { 
+            headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
             }
@@ -249,6 +251,103 @@ export class ApiProxy {
             //data.total_tracks = data.total
 
             return data
+        })
+    }
+
+    public setPlayState = async (playState: PlayState): Promise<number | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'me/player/' + playState, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.status
+        })
+    }
+
+    public skipToNextOrPrevious = async (direction: PlayDirection): Promise<number | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'me/player/' + direction, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.status
+        })
+    }
+
+    public getCurrentTrackCover = async (): Promise<string | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'me/player/currently-playing', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.json()
+        }).then(async (data: CurrentlyPlaying) => {
+            return data.item.album.images[0].url
+        })
+    }
+
+    public setShuffleState = async (state: boolean): Promise<string | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'me/player/shuffle?state=' + state, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.status
+        })
+    }
+
+    public setRepeatState = async (state: RepeatState): Promise<string | Error> => {
+        if (!this.access_token) {
+            return {
+                name: 'NO_ACCESS_TOKEN',
+                message: 'No access token provided'
+            }
+        }
+
+        return await fetch(this.apiURI + 'me/player/repeat?state=' + state, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            return res.status
         })
     }
 }

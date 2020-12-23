@@ -60,8 +60,14 @@ footer section.information-overlay section.controls button.back {
     transform: rotate(180deg);
 }
 
-footer section.information-overlay section.controls button.pause {
+footer section.information-overlay section.controls button.play.hide,
+footer section.information-overlay section.controls button.pause.hide {
     display: none;
+}
+
+footer section.information-overlay section.controls button.play.show,
+footer section.information-overlay section.controls button.pause.show {
+    display: initial;
 }
 
 footer section.information-overlay section.controls button.play,
@@ -145,12 +151,28 @@ footer section.information-overlay div.overlay-bottom span.time {
     font-size: 25px;
 }
 
+footer section.information-overlay div.overlay-bottom span.time span:nth-child(2) {
+    margin: 0 -20px;
+}
+
 footer section.information-overlay div.overlay-bottom button {
     vertical-align: text-bottom;
 }
 
 footer section.information-overlay div.overlay-bottom button.active {
     fill: var(--green);
+}
+
+footer section.information-overlay div.overlay-bottom button.repeat.active.repeat-song:after {
+    content: '1';
+    color: white;
+    position: relative;
+    top: -2px;
+    left: -15px;
+    background-color: var(--green);
+    border-radius: 50px;
+    padding: 2px 4.722px;
+    font-size: .75em;
 }
 
 footer section.progress-bar {

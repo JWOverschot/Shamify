@@ -1,9 +1,10 @@
+import { RepeatState } from "../types/repeatState"
 import { Device } from "./Device"
 import { Track } from "./Track"
 
 export interface Player {
     device: Device,
-    repeat_state: string,
+    repeat_state: RepeatState,
     shuffle_state: boolean,
     context: any,
     timestamp: number,

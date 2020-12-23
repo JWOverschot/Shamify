@@ -1,6 +1,7 @@
 import { Device } from "../../api/models/Device";
 import { Player } from "../../api/models/Player";
 import { Track } from "../../api/models/Track";
+import { RepeatState } from "../../api/types/repeatState";
 import { Helpers } from "../../helpers";
 
 export class FooterTemplate implements Player {
@@ -16,12 +17,12 @@ export class FooterTemplate implements Player {
         this.timestamp = player.timestamp
     }
     device: Device
-    repeat_state: string
-    shuffle_state: boolean
+    repeat_state: RepeatState = RepeatState.off
+    shuffle_state: boolean = false
     context: any
     timestamp: number
     progress_ms: number
-    is_playing: boolean
+    is_playing: boolean = false
     item: Track
     getFormattedProgress = (): string => {
         return this.helpers.formatDurationFromMilliseconds(this.progress_ms)
@@ -31,5 +32,32 @@ export class FooterTemplate implements Player {
     }
     getFormattedTimeRemeing = (): string => {
         return '-' + this.helpers.formatDurationFromMilliseconds(this.getTimeRemeingMs())
+    }
+    getRepeatClass = (): string | null => {
+        let classList;
+        this.repeat_state !== RepeatState.off ? 'active' : null
+        switch (this.repeat_state) {
+            case RepeatState.off:
+                classList = null
+                break
+            case RepeatState.context:
+                classList = 'active'
+                break
+            case RepeatState.track:
+                classList = 'active repeat-song'
+                break
+            default:
+                classList = null
+        }
+        return classList;
+    }
+    getShuffleClass = (): string | null => {
+        return this.shuffle_state ? 'active' : null
+    }
+    getPlayClass = (): string => {
+        return this.is_playing ? 'hide' : 'show'
+    }
+    getPauseClass = (): string => {
+        return this.is_playing ? 'show' : 'hide'
     }
 }

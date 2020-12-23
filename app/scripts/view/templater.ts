@@ -4,12 +4,14 @@ let urlExists = (url: string): Promise<boolean> => {
     return fetch(url).then(res => {
         return res.ok
     })
-
-
 }
 
 let getHTMLTemplate = async (path: string): Promise<string> => {
     return await fetch(window.location.origin + path).then(res => { return res.text() })
+}
+
+let getTrackCover = async (): Promise<string> => {
+    return await fetch(window.location.origin + '/content/cover/currently-playing').then(res => { return res.text() })
 }
 
 let setHTMLTemplate = (template: string, elementId: string): void => {
@@ -67,6 +69,15 @@ let loadFooterContent = () => {
     getHTMLTemplate('/pages/footer').then(text => {
         setHTMLTemplate(text, '#main-footer')
     })
+    loadBackgroundImage()
+}
+
+let loadBackgroundImage = () => {
+    getTrackCover().then((url: string) => {
+        let element = jQuery('#background-content')
+    
+        element[0].style.backgroundImage = `url('${url}')`
+    })
 }
 
 let preventNavigation = () => {
@@ -108,6 +119,8 @@ let navigationHandler = (event: any, isNavigate: boolean) => {
             loadHeaderContent()
             loadMainContent(path.join('/'))
             loadFooterContent()
+            setPageResources('footer')
+            
         //TODO: Page to go to when it doesn't exsist
     }
 }
@@ -149,3 +162,7 @@ window.onpopstate = (event: any) => {
 //         }, true)
 //     })
 // })
+//TODO: Make more intelligent Don't update when music is paused. Update immidetly on media key presses. No updates when scrubbing.
+setInterval (() => {
+    loadFooterContent()
+}, 60000)

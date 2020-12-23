@@ -13,6 +13,9 @@ import { HeaderTemplate } from './template/models/Header'
 import { FooterTemplate } from './template/models/Footer'
 import { Paging } from './api/types/paging'
 import { platform } from 'custom-electron-titlebar/lib/common/platform'
+import { PlayState } from './api/types/playState'
+import { PlayDirection } from './api/types/playDirection'
+import { RepeatState } from './api/types/repeatState'
 
 const { client } = require('./client-keys')
 const express = require('express')
@@ -73,7 +76,7 @@ exp.get('/login', (req: any, res: any) => {
     res.cookie(stateKey, state)
 
     // your application requests authorization
-    const scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-playback-state user-library-read'
+    const scope = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-playback-state user-library-read user-modify-playback-state user-read-currently-playing'
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
@@ -272,6 +275,55 @@ exp.get('/pages/playlist', (req: any, res: any) => {
         }).catch(err => {
             console.error(err)
         })
+    })
+})
+
+exp.get('/content/cover/currently-playing', (req: any, res: any) => {
+
+    apiProxy.getCurrentTrackCover().then(apiRes => {
+        res.send(apiRes)
+    }).catch(err => {
+        console.error(err)
+    })
+})
+
+exp.post('/change/play-state/:state', (req: any, res: any) => {
+    let state: PlayState = req.params.state
+
+    apiProxy.setPlayState(state).then(apiRes => {
+        res.sendStatus(apiRes)
+    }).catch(err => {
+        console.error(err)
+    })
+})
+
+exp.post('/change/track/:direction', (req: any, res: any) => {
+    let direction: PlayDirection = req.params.direction
+
+    apiProxy.skipToNextOrPrevious(direction).then(apiRes => {
+        res.sendStatus(apiRes)
+    }).catch(err => {
+        console.error(err)
+    })
+})
+
+exp.post('/change/shuffle/:state', (req: any, res: any) => {
+    let state: boolean = req.params.state
+
+    apiProxy.setShuffleState(state).then(apiRes => {
+        res.sendStatus(apiRes)
+    }).catch(err => {
+        console.error(err)
+    })
+})
+
+exp.post('/change/repeat/:state', (req: any, res: any) => {
+    let state: RepeatState = req.params.state
+
+    apiProxy.setRepeatState(state).then(apiRes => {
+        res.sendStatus(apiRes)
+    }).catch(err => {
+        console.error(err)
     })
 })
 
