@@ -83,10 +83,10 @@ export class ApiProxy {
 
                     let tracks: Array<TrackSimp> = body.tracks.items
                     //let albumDurationMs = 0
-
+                    let releaseDate = this.helpers.formatDate(body.release_date, DatePrecision.day)
                     tracks.forEach(track => {
                         track.duration = this.helpers.formatDurationFromMilliseconds(track.duration_ms)
-                        track.add_date = body.release_date
+                        track.add_date = releaseDate
                         track.album_name = body.name
                         //albumDurationMs += track.duration_ms
                     })

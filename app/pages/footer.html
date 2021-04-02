@@ -45,7 +45,10 @@
         </button>
     </div>
 </section>
-<section class="progress-bar">
+<section class="progress-bar" 
+    data-duration="{{item.duration_ms}}"
+    data-time="{{progress_ms}}"
+    data-isplaying="{{is_playing}}">
     <div class="needle">
         <div class="circle"></div>
         <div class="triangle-down"></div>

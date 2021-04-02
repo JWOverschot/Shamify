@@ -477,6 +477,10 @@ app.on('browser-window-focus', function () {
     globalShortcut.register("F5", () => {
         console.log("F5 is pressed: Shortcut Disabled");
     });
+    //TODO: Something with media keys
+    // globalShortcut.register('MediaPlayPause', () => {
+        
+    // });
 });
 
 app.on('browser-window-blur', function () {
