@@ -152,6 +152,20 @@ main section.track-list div.track-row {
     background-color: rgba(var(--white-rgb), .4);
 }
 
+main section.track-list div.track-row.playing {
+    animation-name: playing-animation;
+    animation-duration: 5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    background: linear-gradient(90deg,
+        rgb(var(--white-rgb), .4),
+        rgb(var(--green-rgb), .4),
+        rgb(var(--white-rgb), .4)
+        );
+    background-size: 200% 200%;
+
+}
+
 main section.track-list div.track-row.end {
     height: calc(250px + 260px);
     background-color: transparent;
@@ -277,5 +291,14 @@ div.background-image {
     }
     main section.track-list div.track-row.end {
         height: 250px;
+    }
+}
+
+@keyframes playing-animation {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
     }
 }

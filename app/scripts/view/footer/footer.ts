@@ -165,6 +165,11 @@ const timePlusMinusOne = (time: string, minus: boolean) => {
             min = 59
             sec = 59
         }
+
+        // Get overlap time from user
+        if (hour === 0 && min === 0 && sec === 12) {
+            loadFooterContent()
+        }
         
     } else if (!minus) {
         sec += 1
@@ -179,6 +184,8 @@ const timePlusMinusOne = (time: string, minus: boolean) => {
             min = 0
             sec = 0
         }
+    } else {
+        loadFooterContent()
     }
 
     if (hour > 0) {

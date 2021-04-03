@@ -49,6 +49,9 @@ let setPageResources = (pageName: string): void => {
     urlExists(jsLink).then(bool => {
         if (bool) {
             element.append(`<script src="${jsLink}"></script>`)
+            if (pageName === 'album' || pageName === 'playlist') {
+                element.append(`<script src="${window.location.origin + '/js/view/track.js'}"></script>`)
+            }
         }
     })
 }
