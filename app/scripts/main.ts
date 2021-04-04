@@ -53,10 +53,56 @@ app.commandLine.appendSwitch('widevine-cdm-version', '4.10.1503.4')
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
 
 store.onDidChange('access_token', (newValue: string, oldValue: string) => {
+    console.log('access token changed')
     apiProxy = new ApiProxy(newValue)
 })
 
-const server = https.createServer({ key: ssl_key, cert: ssl_cert }, exp);
+const server = https.createServer({ key: ssl_key, cert: ssl_cert }, exp)
+
+function updateAccessToken() {
+    setTimeout(() => {
+        console.log('update access token')
+        let authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+                grant_type: 'refresh_token',
+                refresh_token: store.get('refresh_token')
+            },
+            headers: {
+                'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
+            },
+            json: true
+        }
+        request.post(authOptions, (error: any, response: any, body: any) => {
+            if (!error && response.statusCode === 200) {
+    
+                let access_token = body.access_token
+                let token_expiration = body.expires_in
+    
+                store.set('access_token', access_token)
+                store.set('token_expiration', token_expiration)
+
+                console.log('expires in: ' + token_expiration)
+
+                if (store.get('token_expiration')) {
+                    updateAccessToken()
+                }
+    
+                // apiProxy.getUser().then((res: User | Error) => {
+                //     console.log(res)
+                // }).catch((err: Error) => {
+                //     console.error(err)
+                // })
+            }
+            // else {
+            //     res.redirect('/#' +
+            //         querystring.stringify({
+            //             error: 'invalid_token'
+            //         }))
+            // }
+        })
+    }, ((store.get('token_expiration') / 100) * 25) * 1000)
+}
 
 exp.use(express.static(base_uri))
     .use(cors())
@@ -65,7 +111,7 @@ exp.use(express.static(base_uri))
 exp.get('/', (req: any, res: any) => {
     if (store.get('access_token')) {
         apiProxy = new ApiProxy(store.get('access_token'))
-        res.sendFile(path.join(__dirname + '../../../app/pages/index.html'))   
+        res.sendFile(path.join(__dirname + '../../../app/pages/index.html'))
     } else {
         res.redirect('/login')
     }
@@ -116,17 +162,25 @@ exp.get('/callback', (req: any, res: any) => {
             if (!error && response.statusCode === 200) {
 
                 let access_token = body.access_token,
-                    refresh_token = body.refresh_token
+                    refresh_token = body.refresh_token,
+                    token_expiration = body.expires_in
 
                 store.set('access_token', access_token)
                 store.set('refresh_token', refresh_token)
+                store.set('token_expiration', token_expiration)
+
+                console.log('expires in: ' + token_expiration)
+
+                if (store.get('token_expiration')) {
+                    updateAccessToken()
+                }
 
                 apiProxy.getUser().then((res: User | Error) => {
                     console.log(res)
                 }).catch((err: Error) => {
                     console.error(err)
                 })
-
+                res.sendFile(path.join(__dirname + '../../../app/pages/index.html'))
                 // we can also pass the token to the browser to make requests from there
                 // res.redirect('/?' +
                 // 	querystring.stringify({
@@ -142,6 +196,10 @@ exp.get('/callback', (req: any, res: any) => {
         })
     }
 })
+
+// exp.get('/refresh', (req: any, res: any) => {
+    
+// })
 
 exp.get('/pages/header', (req: any, res: any) => {
     let template: HTMLDocument
@@ -268,8 +326,8 @@ exp.get('/pages/playlist', (req: any, res: any) => {
                 //TODO: Change owner to logged in user
                 //PlaylistObject.owner
                 PlaylistObject.tracks = paging
-                
-                
+
+
                 res.send(compTemplate.render(PlaylistObject))
             }
         }).catch(err => {
@@ -392,7 +450,7 @@ function createWindow() {
 
     // and load the index.html of the app.
     //win.loadFile('./app/pages/index.html')
-    win.loadURL(base_uri)
+    win.loadURL(base_uri + 'login')
 
 
     win.on('closed', function () {
@@ -479,7 +537,7 @@ app.on('browser-window-focus', function () {
     });
     //TODO: Something with media keys
     // globalShortcut.register('MediaPlayPause', () => {
-        
+
     // });
 });
 

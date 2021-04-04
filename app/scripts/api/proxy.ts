@@ -114,6 +114,9 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then(async (data: Playlist) => {
             let tracks: Array<TrackPlaylist> = data.tracks.items
@@ -142,6 +145,8 @@ export class ApiProxy {
             //data.total_tracks = data.tracks.total
 
             return data
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -154,9 +159,14 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then((data: Paging) => {
             return data
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -178,12 +188,17 @@ export class ApiProxy {
             if (res.status === 204) {
                 throw 'NO_CONTENT'
             }
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then((data: Player) => {
             // data.progress = this.helpers.formatDurationFromMilliseconds(data.progress_ms)
             // data.time_remening_ms = data.item.duration_ms - data.progress_ms
             // data.time_remening = '-' + this.helpers.formatDurationFromMilliseconds(data.time_remening_ms)
             return data
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -202,6 +217,9 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then((data: Paging) => {
             return data
@@ -223,6 +241,9 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then(async (data: Paging) => {
             let tracks: Array<TrackPlaylist> = data.items
@@ -251,6 +272,8 @@ export class ApiProxy {
             //data.total_tracks = data.total
 
             return data
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -269,7 +292,12 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.status
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -288,7 +316,12 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.status
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -307,9 +340,14 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.json()
         }).then(async (data: CurrentlyPlaying) => {
             return data.item.album.images[0].url
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -328,7 +366,12 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.status
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -347,7 +390,12 @@ export class ApiProxy {
                 'Authorization': 'Bearer ' + this.access_token
             }
         }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
             return res.status
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 }
