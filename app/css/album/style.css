@@ -147,7 +147,7 @@ main section.track-list {
 
 main section.track-list div.track-row {
     display: grid;
-    grid-template-columns: 55px calc(30% - 55px) 28% 24% 7% 11%;
+    grid-template-columns: 55px calc(30% - 55px) 27% 23% 7% 13%;
     grid-template-rows: 55px;
     background-color: rgba(var(--white-rgb), .4);
 }
