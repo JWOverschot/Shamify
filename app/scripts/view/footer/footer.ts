@@ -1,48 +1,46 @@
 const buttons = jQuery('#main-footer button');
 
-let timeInterval : any
-if (timeInterval) {
-    clearInterval(timeInterval)
-}
+let timeInterval: any
+clearInterval(timeInterval)
 
 buttons.ready(() => {
     let playPause = (state: string) => {
         fetch(window.location.origin + '/change/play-state/' + state, {
             method: 'POST'
         })
-        .then((res) => {
-            if (res.ok) {
-                switch (state) {
-                    case 'play':
-                        jQuery('#main-footer button.play').addClass('hide')
-                        jQuery('#main-footer button.play').removeClass('show')
+            .then((res) => {
+                if (res.ok) {
+                    switch (state) {
+                        case 'play':
+                            jQuery('#main-footer button.play').addClass('hide')
+                            jQuery('#main-footer button.play').removeClass('show')
 
-                        jQuery('#main-footer button.pause').removeClass('hide')
-                        jQuery('#main-footer button.pause').addClass('show')
-                        break
-                    case 'pause':
-                        jQuery('#main-footer button.play').removeClass('hide')
-                        jQuery('#main-footer button.play').addClass('show')
+                            jQuery('#main-footer button.pause').removeClass('hide')
+                            jQuery('#main-footer button.pause').addClass('show')
+                            break
+                        case 'pause':
+                            jQuery('#main-footer button.play').removeClass('hide')
+                            jQuery('#main-footer button.play').addClass('show')
 
-                        jQuery('#main-footer button.pause').addClass('hide')
-                        jQuery('#main-footer button.pause').removeClass('show')
-                        break
+                            jQuery('#main-footer button.pause').addClass('hide')
+                            jQuery('#main-footer button.pause').removeClass('show')
+                            break
+                    }
                 }
-            }
-        })
+            })
     }
 
     let trackSkipDirection = (direction: string) => {
         fetch(window.location.origin + '/change/track/' + direction, {
             method: 'POST'
         })
-        .then((res) => {
-            if (res.ok) {
-                setTimeout(() => {
-                    loadFooterContent()
-                }, 400)
-            }
-        })
+            .then((res) => {
+                if (res.ok) {
+                    setTimeout(() => {
+                        loadFooterContent()
+                    }, 400)
+                }
+            })
     }
 
     let toggleShuffle = (element: any) => {
@@ -51,11 +49,11 @@ buttons.ready(() => {
         fetch(window.location.origin + '/change/shuffle/' + state, {
             method: 'POST'
         })
-        .then((res) => {
-            if (res.ok) {
-                jQuery('#main-footer button.suffle').toggleClass('active')
-            }
-        })
+            .then((res) => {
+                if (res.ok) {
+                    jQuery('#main-footer button.suffle').toggleClass('active')
+                }
+            })
     }
 
     let toggleRepeat = (element: any) => {
@@ -68,27 +66,26 @@ buttons.ready(() => {
         } else {
             state = 'off'
         }
-    
+
         fetch(window.location.origin + '/change/repeat/' + state, {
             method: 'POST'
         })
-        .then((res) => {
-            if (res.ok) {
-                debugger
-                switch (state) {
-                    case 'context':
-                        jQuery('#main-footer button.repeat').addClass('active')
-                        break
-                    case 'track':
-                        jQuery('#main-footer button.repeat').addClass('repeat-song')
-                        break
-                    case 'off':
-                    default:
-                        jQuery('#main-footer button.repeat').removeClass('active')
-                        jQuery('#main-footer button.repeat').removeClass('repeat-song')
+            .then((res) => {
+                if (res.ok) {
+                    switch (state) {
+                        case 'context':
+                            jQuery('#main-footer button.repeat').addClass('active')
+                            break
+                        case 'track':
+                            jQuery('#main-footer button.repeat').addClass('repeat-song')
+                            break
+                        case 'off':
+                        default:
+                            jQuery('#main-footer button.repeat').removeClass('active')
+                            jQuery('#main-footer button.repeat').removeClass('repeat-song')
+                    }
                 }
-            }
-        })
+            })
     }
 
     // Footer buttons listners
@@ -117,7 +114,7 @@ const startProgressBar = () => {
     const computedLenghtInformationOverlay = jQuery('#main-footer .information-overlay').width()
     const computedLenghtinformationOverlayImg = jQuery('#main-footer .information-overlay img.cover').width()
     const ProgressBarFullWith = parseFloat(computedLenghtInformationOverlay) - parseFloat(computedLenghtinformationOverlayImg)
-    
+
     const computedLenghtProgressBar = progressBar.width()
     const computedLenghtProgressBarInt = parseFloat(computedLenghtProgressBar)
     const percentageProgressBarInt = Math.round((computedLenghtProgressBarInt / ProgressBarFullWith) * 100)
@@ -167,10 +164,14 @@ const timePlusMinusOne = (time: string, minus: boolean) => {
         }
 
         // Get overlap time from user
-        if (hour === 0 && min === 0 && sec === 12) {
+        if (hour === 0 && min === 0 && sec === 4) {
             loadFooterContent()
         }
-        
+
+        if (hour === 0 && min === 0 && sec === 0) {
+            loadFooterContent()
+        }
+
     } else if (!minus) {
         sec += 1
 
@@ -184,8 +185,6 @@ const timePlusMinusOne = (time: string, minus: boolean) => {
             min = 0
             sec = 0
         }
-    } else {
-        loadFooterContent()
     }
 
     if (hour > 0) {
@@ -206,6 +205,7 @@ progressBar.ready(() => {
     if (jQuery('.progress-bar').attr('data-isplaying') == 'true') {
         startProgressBar()
 
+        clearInterval(timeInterval)
         timeInterval = setInterval(() => {
             jQuery('.elapsed').text(timePlusMinusOne(jQuery('.elapsed').text(), false))
             jQuery('.remaning-duration').text('-' + timePlusMinusOne(jQuery('.remaning-duration').text().substring(1), true))
