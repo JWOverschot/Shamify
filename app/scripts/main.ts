@@ -101,7 +101,7 @@ function updateAccessToken() {
             //         }))
             // }
         })
-    }, ((store.get('token_expiration') / 100) * 25) * 1000)
+    }, ((store.get('token_expiration') / 100) * 75) * 1000)
 }
 
 exp.use(express.static(base_uri))
