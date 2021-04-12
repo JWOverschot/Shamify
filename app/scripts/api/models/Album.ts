@@ -1,8 +1,9 @@
 import { ArtistSimp } from './ArtistSimp'
 import { TrackSimp } from '../models/TrackSimp'
 import { image } from '../types/image'
-import { Paging } from '../types/paging';
+import { PagingAlbum } from '../types/pagingAlbum';
 import { DatePrecision } from '../types/datePrecision'
+import { Paging } from '../types/paging';
 
 export interface Album {
     id: string,

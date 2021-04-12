@@ -8,7 +8,8 @@ import { Playlist } from './models/Playlist'
 import { TrackPlaylist } from './models/TrackPlaylist'
 import { DatePrecision } from './types/datePrecision'
 import { Track } from './models/Track'
-import { Paging } from './types/paging'
+import { PagingAlbum } from './types/pagingAlbum'
+import { PagingPlaylist } from './types/pagingPlaylist'
 import { Player } from './models/Player'
 import { PlayState } from './types/playState'
 import { PlayDirection } from './types/playDirection'
@@ -68,34 +69,44 @@ export class ApiProxy {
             }
         }
 
-        let options = {
-            url: this.apiURI + 'albums/' + id,
-            headers: { 'Authorization': 'Bearer ' + this.access_token },
-            json: true,
-        }
+        return await fetch(this.apiURI + 'albums/' + id, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
+            return res.json()
+        }).then(async (data: Album) => {
+            let tracks: Array<TrackSimp> = data.tracks.items
+            //let playlistDurationMs = 0
+            let pageCheck = (data.tracks.total - data.tracks.offset) > data.tracks.limit
+            let nextLink = data.tracks.next
 
-        return await new Promise<Album>((resolve, reject) => {
-            request.get(options, (error: any, response: any, body: Album) => {
-                if (error) {
-                    reject(error)
-                } else {
-                    //body.release_date = this.helpers.formatDate(body.release_date, body.release_date_precision)
+            while (pageCheck && nextLink) {
+                await this.getTracksAlbum(nextLink).then((res) => {
+                    if ('TrackSimp[]' in res.items) {
+                        tracks = tracks.concat(res.items)
+                    }
+                    // Update page check with new data from new page object
+                    pageCheck = (res.total - res.offset) > res.limit
+                    nextLink = res.next
+                })
+            }
 
-                    let tracks: Array<TrackSimp> = body.tracks.items
-                    //let albumDurationMs = 0
-                    let releaseDate = this.helpers.formatDate(body.release_date, DatePrecision.day)
-                    tracks.forEach(track => {
-                        track.duration = this.helpers.formatDurationFromMilliseconds(track.duration_ms)
-                        track.add_date = releaseDate
-                        track.album_name = body.name
-                        //albumDurationMs += track.duration_ms
-                    })
-                    //body.tracks.items = tracks
-                    //body.duration = this.helpers.formatDurationFromMilliseconds(albumDurationMs, true)
-
-                    resolve(body)
-                }
+            tracks.forEach(track => {
+                track.duration = this.helpers.formatDurationFromMilliseconds(track.duration_ms)
+                track.add_date = track.add_date
             })
+
+            data.tracks.items = tracks
+
+            return data
+        }).catch((error: any) => {
+            console.log(error)
         })
     }
 
@@ -125,7 +136,7 @@ export class ApiProxy {
             let nextLink = data.tracks.next
 
             while (pageCheck && nextLink) {
-                await this.getTracks(nextLink).then((res) => {
+                await this.getTracksPlaylist(nextLink).then((res) => {
                     tracks = tracks.concat(res.items)
                     // Update page check with new data from new page object
                     pageCheck = (res.total - res.offset) > res.limit
@@ -150,7 +161,7 @@ export class ApiProxy {
         })
     }
 
-    public getTracks = async (url: string): Promise<Paging> => {
+    public getTracksPlaylist = async (url: string): Promise<PagingPlaylist> => {
         //https://api.spotify.com/v1/playlists/39IbE4MVy7oNVgdwRwz6rL/tracks?offset=100&limit=100
         return await fetch(url, {
             method: 'GET',
@@ -163,7 +174,27 @@ export class ApiProxy {
                 throw Error(res.statusText);
             }
             return res.json()
-        }).then((data: Paging) => {
+        }).then((data: PagingPlaylist) => {
+            return data
+        }).catch((error: any) => {
+            console.log(error)
+        })
+    }
+
+    public getTracksAlbum = async (url: string): Promise<PagingAlbum> => {
+        //https://api.spotify.com/v1/playlists/39IbE4MVy7oNVgdwRwz6rL/tracks?offset=100&limit=100
+        return await fetch(url, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': 'Bearer ' + this.access_token
+            }
+        }).then((res: Response) => {
+            if (!res.ok) {
+                throw Error(res.statusText);
+            }
+            return res.json()
+        }).then((data: PagingAlbum) => {
             return data
         }).catch((error: any) => {
             console.log(error)
@@ -202,7 +233,7 @@ export class ApiProxy {
         })
     }
 
-    public getUserPlaylists = async (): Promise<Paging | Error> => {
+    public getUserPlaylists = async (): Promise<PagingPlaylist | Error> => {
         if (!this.access_token) {
             return {
                 name: 'NO_ACCESS_TOKEN',
@@ -221,12 +252,12 @@ export class ApiProxy {
                 throw Error(res.statusText);
             }
             return res.json()
-        }).then((data: Paging) => {
+        }).then((data: PagingPlaylist) => {
             return data
         })
     }
 
-    public getSavedSongs = async (): Promise<Paging | Error> => {
+    public getSavedSongs = async (): Promise<PagingPlaylist | Error> => {
         if (!this.access_token) {
             return {
                 name: 'NO_ACCESS_TOKEN',
@@ -245,14 +276,14 @@ export class ApiProxy {
                 throw Error(res.statusText);
             }
             return res.json()
-        }).then(async (data: Paging) => {
+        }).then(async (data: PagingPlaylist) => {
             let tracks: Array<TrackPlaylist> = data.items
             //let playlistDurationMs = 0
             let pageCheck = (data.total - data.offset) > data.limit
             let nextLink = data.next
 
             while (pageCheck && nextLink) {
-                await this.getTracks(nextLink).then((res) => {
+                await this.getTracksPlaylist(nextLink).then((res) => {
                     tracks = tracks.concat(res.items)
                     // Update page check with new data from new page object
                     pageCheck = (res.total - res.offset) > res.limit

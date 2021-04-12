@@ -3,8 +3,9 @@ import { ArtistSimp } from "../../api/models/ArtistSimp";
 import { TrackSimp } from "../../api/models/TrackSimp";
 import { DatePrecision } from "../../api/types/datePrecision";
 import { image } from "../../api/types/image";
-import { Paging } from "../../api/types/paging";
+import { PagingAlbum } from "../../api/types/pagingAlbum";
 import { Helpers } from "../../helpers";
+import { TrackAlbumTemplate } from "./TrackAlbum";
 
 export class AlbumTemplate {
     private helpers: Helpers = new Helpers()
@@ -18,6 +19,13 @@ export class AlbumTemplate {
             this.release_date_precision = album.release_date_precision
             this.total_tracks = album.total_tracks
             this.tracks = album.tracks
+
+            let tracksInTemplate: TrackAlbumTemplate[] = [];
+            album.tracks.items.forEach((track: TrackSimp) => {
+                tracksInTemplate.push(new TrackAlbumTemplate(track))
+            })
+
+            this.tracks.items = tracksInTemplate
         }
     }
 
@@ -27,9 +35,9 @@ export class AlbumTemplate {
     release_date: string = '1999-12-09'
     release_date_precision: DatePrecision = DatePrecision.day
     total_tracks: number = 1
-    tracks: Paging = {
+    tracks: PagingAlbum = {
         //TODO: make sample track class and fill items with it
-        items: [],
+        items: [new TrackAlbumTemplate()],
         limit: 1,
         next: null,
         offset: 0,
@@ -38,7 +46,7 @@ export class AlbumTemplate {
     }
     getTotalDuration = (): string => {
         let albumDurationMs = 0
-        this.tracks.items.forEach((track: TrackSimp) => {
+        this.tracks.items.forEach((track: TrackSimp | TrackAlbumTemplate) => {
             albumDurationMs += track.duration_ms
         });
         return this.helpers.formatDurationFromMilliseconds(albumDurationMs, true)

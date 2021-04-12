@@ -26,7 +26,7 @@
         <span class="track-title" title="Title: {{name}}">{{name}}</span>
         <span class="track-artist">{{#artists}}<a href="/{{type}}/{{id}}" title="Artist: {{name}}">{{name}}</a> {{/artists}}</span>
         <span class="track-album" title="Album: {{album_name}}"><a href="#">{{album_name}}</a></span>
-        <span class="track-duration" title="Duration: {{duration}}">{{duration}}</span>
+        <span class="track-duration" title="Duration: {{getTrackDuration}}">{{getTrackDuration}}</span>
         <span class="track-add-date" title="Date Added: {{add_date}}">{{add_date}}</span>
     </div>
     {{/tracks.items}}

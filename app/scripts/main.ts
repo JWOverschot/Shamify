@@ -11,11 +11,11 @@ import { AlbumTemplate } from './template/models/Album'
 import { PlaylistTemplate } from './template/models/Playlist'
 import { HeaderTemplate } from './template/models/Header'
 import { FooterTemplate } from './template/models/Footer'
-import { Paging } from './api/types/paging'
 import { platform } from 'custom-electron-titlebar/lib/common/platform'
 import { PlayState } from './api/types/playState'
 import { PlayDirection } from './api/types/playDirection'
 import { RepeatState } from './api/types/repeatState'
+import { PagingPlaylist } from './api/types/pagingPlaylist'
 
 const { client } = require('./client-keys')
 const express = require('express')
@@ -317,7 +317,7 @@ exp.get('/pages/playlist', (req: any, res: any) => {
 
         compTemplate = hogan.compile(template)
 
-        apiProxy.getSavedSongs().then((paging: Paging | Error) => {
+        apiProxy.getSavedSongs().then((paging: PagingPlaylist | Error) => {
             // Render context to template
             if (!(paging instanceof Error)) {
                 let PlaylistObject: PlaylistTemplate = new PlaylistTemplate()

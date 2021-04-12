@@ -3,7 +3,7 @@ import { TrackPlaylist } from "../../api/models/TrackPlaylist";
 import { TrackSimp } from "../../api/models/TrackSimp";
 import { User } from "../../api/models/User";
 import { image } from "../../api/types/image";
-import { Paging } from "../../api/types/paging";
+import { PagingPlaylist } from "../../api/types/pagingPlaylist";
 import { Helpers } from "../../helpers";
 
 export class PlaylistTemplate {
@@ -19,7 +19,7 @@ export class PlaylistTemplate {
     }
     name: string = 'Playlist'
     description: string = 'This is a playlist'
-    tracks: Paging = {
+    tracks: PagingPlaylist = {
         //TODO: make sample track class and fill items with it
         items: [],
         limit: 1,
