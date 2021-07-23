@@ -103,6 +103,7 @@ main aside {
 main aside img.cover {
     width: 225px;
     height: 225px;
+    border-radius: 5px;
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 1;
@@ -163,7 +164,6 @@ main section.track-list div.track-row.playing {
         rgb(var(--white-rgb), .4)
         );
     background-size: 200% 200%;
-
 }
 
 main section.track-list div.track-row.end {
@@ -184,7 +184,6 @@ main section.track-list div.track-row div.cover-overlay {
     transition-duration: .3s;
     transition-timing-function: ease-in-out;
     background-color: rgba(var(--black-rgb), .3);
-    margin: 1px;
 }
 
 main section.track-list div.track-row div.cover-overlay:hover {
@@ -194,8 +193,8 @@ main section.track-list div.track-row div.cover-overlay:hover {
 main section.track-list div.track-row div.cover-overlay,
 main section.track-list div.track-row div.cover-overlay button,
 main section.track-list div.track-row div.cover-overlay button svg {
-    height: 53px;
-    width: 53px;
+    height: 55px;
+    width: 55px;
 }
 
 main section.track-list div.track-row div.cover-overlay button.play {
@@ -216,9 +215,14 @@ main section.track-list div.track-row img.cover {
     grid-row-start: 1;
     grid-row-end: 2;
 
-    width: 53px;
-    height: 53px;
-    margin: 1px;
+    width: 55px;
+    height: 55px;
+}
+
+main section.track-list div.track-row,
+main section.track-list div.track-row img.cover,
+main section.track-list div.track-row div.cover-overlay {
+    border-radius: 5px 0 0 5px;
 }
 
 main section.track-list div.track-row span {
