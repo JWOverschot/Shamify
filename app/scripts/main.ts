@@ -202,7 +202,7 @@ exp.get('/callback', (req: any, res: any) => {
 // })
 
 exp.get('/pages/header', (req: any, res: any) => {
-    let template: HTMLDocument
+    let template: Document
 
     fs.readFile(path.join(__dirname + '../../../app/pages/header.html'), 'utf8', (err: any, data: any) => {
         if (err) {
@@ -225,7 +225,7 @@ exp.get('/pages/header', (req: any, res: any) => {
 })
 
 exp.get('/pages/footer', async (req: any, res: any) => {
-    let template: HTMLDocument
+    let template: Document
 
     fs.readFile(path.join(__dirname + '../../../app/pages/footer.html'), 'utf8', (err: any, data: any) => {
         if (err) {
@@ -248,13 +248,13 @@ exp.get('/pages/footer', async (req: any, res: any) => {
 })
 
 exp.get('/pages/auth', (req: any, res: any) => {
-    let template: HTMLDocument = fs.readFileSync(path.join(__dirname + '../../../app/pages/auth.html'))
+    let template: Document = fs.readFileSync(path.join(__dirname + '../../../app/pages/auth.html'))
     res.send(template)
 })
 
 exp.get('/pages/album/:id', (req: any, res: any) => {
     let albumId: string = req.params.id
-    let template: HTMLDocument
+    let template: Document
     let compTemplate: any
 
     // First I want to read the file
@@ -280,7 +280,7 @@ exp.get('/pages/album/:id', (req: any, res: any) => {
 
 exp.get('/pages/playlist/:id', (req: any, res: any) => {
     let playlistId: string = req.params.id
-    let template: HTMLDocument
+    let template: Document
     let compTemplate: any
 
     // First I want to read the file
@@ -305,7 +305,7 @@ exp.get('/pages/playlist/:id', (req: any, res: any) => {
 })
 
 exp.get('/pages/playlist', (req: any, res: any) => {
-    let template: HTMLDocument
+    let template: Document
     let compTemplate: any
 
     // First I want to read the file
