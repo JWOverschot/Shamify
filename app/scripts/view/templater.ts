@@ -54,6 +54,12 @@ let setPageResources = (pageName: string): void => {
             }
         }
     })
+
+    urlExists(window.location.origin + '/js/view/track.js').then(bool => {
+        if (bool && (pageName === 'album' || pageName === 'playlist')) {
+            element.append(`<script src="${window.location.origin + '/js/view/track.js'}"></script>`)
+        }
+    })
 }
 
 let loadHeaderContent = () => {
