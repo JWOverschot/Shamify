@@ -12,6 +12,7 @@ export class TrackPlaylistTemplate {
     constructor(track?: Track) {
         if (track) {
             this.id = track.id
+            this.position = track.position
             this.name = track.name
             this.artists = track.artists
             this.album_name = track.album_name
@@ -21,6 +22,7 @@ export class TrackPlaylistTemplate {
     }
 
     id: string = '0aAAaA00aaaaA0A000a0aa'
+    position: number = 0
     name: string = 'Track'
     images: Array<image> = [{ height: null, url: 'https://nl.concerty.com/img/no_cover.png', width: null }]
     artists: Array<ArtistSimp> = [{ id: '0a00a0A0aaAAaaAAAA0A0A', name: 'Artist Name' }]

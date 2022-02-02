@@ -19,22 +19,22 @@
   },
   "homepage": "https://github.com/JWOverschot/Shamify#readme",
   "devDependencies": {
-    "electron": "^11.0.2",
-    "typescript": "^3.6.3"
+    "electron": "^16.0.8",
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "cookie-parser": "^1.4.4",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "custom-electron-titlebar": "^3.2.5",
-    "electron-store": "^6.0.1",
+    "custom-electron-titlebar": "^4.0.1",
+    "electron-store": "^8.0.1",
     "electron-window-state": "^5.0.3",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "hogan.js": "^3.0.2",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "moment": "^2.29.1",
-    "node-fetch": "^2.6.1",
-    "querystring": "^0.2.0",
-    "request": "^2.88.0",
-    "superagent": "^5.1.0"
+    "node-fetch": "^2.6.7",
+    "querystring": "^0.2.1",
+    "request": "^2.88.2",
+    "superagent": "^7.1.1"
   }
 }

@@ -1,72 +1,3 @@
-/* width */
-::-webkit-scrollbar {
-    width: 8px;
-    margin-left: -10px;
-    display: none;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #00000000;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgb(46, 46, 46);
-    border-radius: 5px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-body {
-    margin: 0;
-    background-color: black;
-}
-
-body div.container-after-titlebar {
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 65px calc(100% - (65px + (30px + 250px))) calc(30px + 250px);
-    margin-top: 30px;
-    height: 100vh;
-    overflow: hidden !important;
-    
-    position: initial !important;
-    inset: 0 !important;
-}
-
-p, h1, h2, h3, h4, h5, h6, span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-svg.svg-filter {
-    width: 0px;
-    height: 0px;
-}
-
-button {
-    background: none;
-    border: none;
-    fill: var(--white);
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-}
-
-button:focus {
-    outline: none;
-}
-
-button svg {
-    width: 24px;
-    height: 24px;
-}
-
 main {
     grid-column-start: 1;
     grid-column-end: 3;
@@ -76,6 +7,14 @@ main {
     grid-template-columns: 100%;
     grid-template-rows: 65px 255px calc(100% - (65px - 255px)) 250px;
     margin-top: -65px;
+}
+
+main > div {
+    display: contents;
+}
+
+main .hide {
+    display: none;
 }
 
 main aside {
@@ -154,7 +93,7 @@ main section.track-list div.track-row {
 }
 
 main section.track-list div.track-row.playing {
-    animation-name: playing-animation;
+    /* animation-name: playing-animation;
     animation-duration: 5s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
@@ -163,7 +102,60 @@ main section.track-list div.track-row.playing {
         rgb(var(--green-rgb), .4),
         rgb(var(--white-rgb), .4)
         );
-    background-size: 200% 200%;
+    background-size: 200% 200%; */
+    overflow: clip;
+}
+
+main section.track-list div.track-row.playing::after {
+    content: '';
+    position: relative;
+    height: 55px;
+    width: 10000%;
+    left: 55px;
+    z-index: -1;
+    top: -55px;
+    filter: blur(7px);
+    transform: translate(0, 0);
+    margin-bottom: -55px;
+    animation-name: playing-animation;
+    animation-duration: .3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    /*background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%20320%22%3E%3Cpath%20fill%3D%22%231DB955%22%20fill-opacity%3D%221%22%20d%3D%22M0%2C224L24%2C224C48%2C224%2C96%2C224%2C144%2C192C192%2C160%2C240%2C96%2C288%2C85.3C336%2C75%2C384%2C117%2C432%2C117.3C480%2C117%2C528%2C75%2C576%2C74.7C624%2C75%2C672%2C117%2C720%2C128C768%2C139%2C816%2C117%2C864%2C106.7C912%2C96%2C960%2C96%2C1008%2C80C1056%2C64%2C1104%2C32%2C1152%2C64C1200%2C96%2C1248%2C192%2C1296%2C229.3C1344%2C267%2C1392%2C245%2C1416%2C234.7L1440%2C224L1440%2C320L1416%2C320C1392%2C320%2C1344%2C320%2C1296%2C320C1248%2C320%2C1200%2C320%2C1152%2C320C1104%2C320%2C1056%2C320%2C1008%2C320C960%2C320%2C912%2C320%2C864%2C320C816%2C320%2C768%2C320%2C720%2C320C672%2C320%2C624%2C320%2C576%2C320C528%2C320%2C480%2C320%2C432%2C320C384%2C320%2C336%2C320%2C288%2C320C240%2C320%2C192%2C320%2C144%2C320C96%2C320%2C48%2C320%2C24%2C320L0%2C320Z%22%20style%3D%22--darkreader-inline-fill%3A%2315853d%3B%22%20data-darkreader-inline-fill%3D%22%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); */
+    /*background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%20320%22%3E%0A%20%20%3Cpath%20fill%3D%22%231DB955%22%20fill-opacity%3D%221%22%20d%3D%22M0%2C192L34.3%2C170.7C68.6%2C149%2C137%2C107%2C206%2C74.7C274.3%2C43%2C343%2C21%2C411%2C42.7C480%2C64%2C549%2C128%2C617%2C138.7C685.7%2C149%2C754%2C107%2C823%2C112C891.4%2C117%2C960%2C171%2C1029%2C208C1097.1%2C245%2C1166%2C267%2C1234%2C261.3C1302.9%2C256%2C1371%2C224%2C1406%2C208L1440%2C192L1440%2C320L1405.7%2C320C1371.4%2C320%2C1303%2C320%2C1234%2C320C1165.7%2C320%2C1097%2C320%2C1029%2C320C960%2C320%2C891%2C320%2C823%2C320C754.3%2C320%2C686%2C320%2C617%2C320C548.6%2C320%2C480%2C320%2C411%2C320C342.9%2C320%2C274%2C320%2C206%2C320C137.1%2C320%2C69%2C320%2C34%2C320L0%2C320Z%22%20style%3D%22--darkreader-inline-fill%3A%2315853d%3B%22%20data-darkreader-inline-fill%3D%22%22%3E%3C%2Fpath%3E%0A%3C%2Fsvg%3E"); */
+    --wave-width: 50px;
+    --wave-height: 50px;
+    --line-thickness: 10px;
+    --radius: calc((var(--wave-width) + var(--line-thickness) + var(--line-thickness)) / 4);
+    background-image: radial-gradient(
+      circle at center top,
+      transparent,
+      transparent calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) var(--radius),
+      transparent var(--radius),
+      transparent
+    ),
+    radial-gradient(
+      circle at right bottom,
+      transparent,
+      transparent calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) var(--radius),
+      transparent var(--radius),
+      transparent
+    ),
+    radial-gradient(
+      circle at left bottom,
+      transparent,
+      transparent calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) calc(var(--radius) - var(--line-thickness)),
+      rgb(var(--green-rgb)) var(--radius),
+      transparent var(--radius),
+      transparent
+    );
+    background-position-y: 27px;
+    background-size: var(--wave-width) var(--wave-height);
 }
 
 main section.track-list div.track-row.end {
@@ -197,12 +189,12 @@ main section.track-list div.track-row div.cover-overlay button svg {
     width: 55px;
 }
 
-main section.track-list div.track-row div.cover-overlay button.play {
+main section.track-list div.track-row div.cover-overlay button.play{
     
 }
 
 main section.track-list div.track-row div.cover-overlay button.pause {
-    display: none;
+
 }
 
 main section.track-list div.track-row div.cover-overlay button svg {
@@ -238,18 +230,6 @@ main section.track-list div.track-row span.track-artist a:not(:last-child)::afte
 main section.track-list div.track-row span.track-duration,
 main section.track-list div.track-row span.track-add-date {
     text-align: end;
-}
-
-div.background-image {
-    filter: blur(25px);
-    opacity: 0.5;
-    position: absolute;
-    z-index: -1000;
-    height: 110vh;
-    width: 110vw;
-    transform: translate(-5%, -5%);
-    background-position: center;
-    background-size: cover;
 }
 
 @media screen and (min-width: 1400px) {
@@ -298,11 +278,182 @@ div.background-image {
     }
 }
 
-@keyframes playing-animation {
+/* @keyframes playing-animation {
     0%, 100% {
         background-position: 0% 50%;
     }
     50% {
         background-position: 100% 50%;
     }
+} */
+
+@keyframes playing-animation {
+    from {
+        transform: translateX(0px);
+    }
+    from {
+        transform: translateX(-50px);
+    }
 }
+
+/* styling for full screen cover art */
+
+/* 
+header#main-header {
+    display: none;
+}
+
+main#main-main {
+    display: none;
+}
+
+footer#main-footer .information-overlay img {
+    display: none;
+}
+
+#background-content {
+    transform: translate(0, 0);
+    filter: blur(2px);
+    opacity: 0.7;
+}
+
+footer#main-footer {
+    background: none;
+    backdrop-filter: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: auto;
+    grid-template-rows: auto 25em;
+}
+
+footer#main-footer .information-overlay {
+    grid-row-start: 2;
+    grid-template-columns: 100%;
+    grid-template-rows: 50% 50%;
+    background: linear-gradient(
+        0deg, 
+        rgba(var(--black-rgb), .75) 0%,
+        rgba(var(--black-rgb), .4) 55%,
+        rgba(var(--black-rgb), 0) 100%
+    );
+    padding: 5em 20px 0 20px;
+}
+
+footer#main-footer .information-overlay .controls {
+    opacity: 1;
+    background: none;
+    grid-column-start: 1;
+    grid-row-start: 2;
+    justify-content: center;
+}
+
+
+footer#main-footer .information-overlay .overlay-top,
+footer#main-footer .information-overlay .overlay-bottom {
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+
+footer#main-footer .information-overlay .overlay-top {
+    grid-template-rows: 1 1;
+}
+
+footer#main-footer .information-overlay .overlay-top .playing-title {
+    align-self: end;
+    font-size: 3em;
+}
+
+footer#main-footer .information-overlay .overlay-top .playing-artist {
+    align-self: start;
+}
+
+footer#main-footer .information-overlay .overlay-bottom {
+    justify-content: right;
+}
+
+footer#main-footer .progress-bar {
+    display: none;
+}
+
+@media (min-width: 0) {
+    #background-content img {
+        width: auto;
+        height: 100%;
+        left: calc((100vw - 100vh) / 2);
+        top: 0;
+    }
+}
+
+@media (min-width: 600px) and (orientation:landscape) {
+    #background-content img {
+        height: auto;
+        width: 100%;
+        left: 0;
+        top: calc((100vh - 100vw) / 2);
+    }
+}
+
+#background-content img {
+    animation-name: bg-movement;
+    animation-duration: 15000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0, 0, 1, 0.88);
+    transform: translate(0%, 0%);
+}
+
+@media (min-width: 0) {
+    @keyframes bg-movement {
+        25% {
+            left: calc(100vw - 100vh);
+            animation-timing-function: cubic-bezier(0, 0.12, 1, 1);
+        }
+
+        40% {
+            animation-timing-function: linear;
+        }
+
+        50% {
+            left: calc((100vw - 100vh) / 2);
+            animation-timing-function: linear;
+        }
+
+        60% {
+            animation-timing-function: cubic-bezier(0, 0, 1, 0.88);
+        }
+
+        75% {
+            left: 0;
+            animation-timing-function: cubic-bezier(0, 0.12, 1, 1);
+        }
+    }
+}
+
+@media (min-width: 600px) and (orientation:landscape) {
+    @keyframes bg-movement {
+        25% {
+            top: calc(100vh - 100vw);
+            animation-timing-function: cubic-bezier(0, 0.12, 1, 1);
+        }
+
+        40% {
+            animation-timing-function: linear;
+        }
+
+        50% {
+            top: calc((100vh - 100vw) / 2);
+            animation-timing-function: linear;
+        }
+
+        60% {
+            animation-timing-function: cubic-bezier(0, 0, 1, 0.88);
+        }
+
+        75% {
+            top: 0;
+            animation-timing-function: cubic-bezier(0, 0.12, 1, 1);
+        }
+    }
+}
+
+*/

@@ -14,5 +14,6 @@ export interface Album {
     release_date_precision: DatePrecision,
     total_tracks: number,
     tracks: Paging,
-    type: string
+    type: string,
+    uri: string
 }

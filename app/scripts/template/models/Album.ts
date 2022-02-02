@@ -26,6 +26,7 @@ export class AlbumTemplate {
             })
 
             this.tracks.items = tracksInTemplate
+            this.uri = album.uri
         }
     }
 
@@ -44,6 +45,7 @@ export class AlbumTemplate {
         previous: null,
         total: 1
     }
+    uri: string = 'spotify:album:5Z9iiGl2FcIfa3BMiv6OIw'
     getTotalDuration = (): string => {
         let albumDurationMs = 0
         this.tracks.items.forEach((track: TrackSimp | TrackAlbumTemplate) => {

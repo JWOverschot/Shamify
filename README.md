@@ -19,4 +19,5 @@ Everything is handled client side, so your Spotify **client id** and **client se
 |M                 |Mute audio                  |
 |R                 |Cycle trough repeat options |
 |S                 |Shuffle                     |
-|F                 |Search                      |
+|F                 |Full screen                 |
+|CTRL + F          |Search                      |

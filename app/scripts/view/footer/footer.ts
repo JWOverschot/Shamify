@@ -1,9 +1,9 @@
-const buttons = jQuery('#main-footer button');
+const footerButtons = jQuery('#main-footer button');
 
 let timeInterval: any
 clearInterval(timeInterval)
 
-buttons.ready(() => {
+footerButtons.ready(() => {
     let playPause = (state: string) => {
         fetch(window.location.origin + '/change/play-state/' + state, {
             method: 'POST'
@@ -12,6 +12,8 @@ buttons.ready(() => {
                 if (res.ok) {
                     switch (state) {
                         case 'play':
+                            jQuery('#main-footer .progress-bar').attr('data-isplaying', 'true')
+
                             jQuery('#main-footer button.play').addClass('hide')
                             jQuery('#main-footer button.play').removeClass('show')
 
@@ -19,6 +21,8 @@ buttons.ready(() => {
                             jQuery('#main-footer button.pause').addClass('show')
                             break
                         case 'pause':
+                            jQuery('#main-footer .progress-bar').attr('data-isplaying', 'false')
+
                             jQuery('#main-footer button.play').removeClass('hide')
                             jQuery('#main-footer button.play').addClass('show')
 
@@ -26,6 +30,7 @@ buttons.ready(() => {
                             jQuery('#main-footer button.pause').removeClass('show')
                             break
                     }
+                    setPlayingTrack()
                 }
             })
     }
@@ -89,18 +94,25 @@ buttons.ready(() => {
     }
 
     // Footer buttons listners
+    jQuery('#main-footer button.play').off('click')
     jQuery('#main-footer button.play').on('click', () => {
         playPause('play')
         startProgressBar()
+        timeInterval = timeIntervalFunc()
     })
+    jQuery('#main-footer button.pause').off('click')
     jQuery('#main-footer button.pause').on('click', () => {
         playPause('pause')
         pauseProgressBar()
         clearInterval(timeInterval)
     })
+    jQuery('#main-footer button.back').off('click')
     jQuery('#main-footer button.back').on('click', () => { trackSkipDirection('previous') })
+    jQuery('#main-footer button.next').off('click')
     jQuery('#main-footer button.next').on('click', () => { trackSkipDirection('next') })
+    jQuery('#main-footer button.suffle').off('click')
     jQuery('#main-footer button.suffle').on('click', (ele: any) => { toggleShuffle(ele) })
+    jQuery('#main-footer button.repeat').off('click')
     jQuery('#main-footer button.repeat').on('click', (ele: any) => { toggleRepeat(ele) })
 })
 
@@ -194,6 +206,13 @@ const timePlusMinusOne = (time: string, minus: boolean) => {
     }
 }
 
+const timeIntervalFunc = () => {
+    return setInterval(() => {
+        jQuery('.elapsed').text(timePlusMinusOne(jQuery('.elapsed').text(), false))
+        jQuery('.remaning-duration').text('-' + timePlusMinusOne(jQuery('.remaning-duration').text().substring(1), true))
+    }, 1000)
+}
+
 progressBar.ready(() => {
     // Init progress bar
     (() => {
@@ -206,9 +225,6 @@ progressBar.ready(() => {
         startProgressBar()
 
         clearInterval(timeInterval)
-        timeInterval = setInterval(() => {
-            jQuery('.elapsed').text(timePlusMinusOne(jQuery('.elapsed').text(), false))
-            jQuery('.remaning-duration').text('-' + timePlusMinusOne(jQuery('.remaning-duration').text().substring(1), true))
-        }, 1000)
+        timeInterval = timeIntervalFunc()
     }
 })

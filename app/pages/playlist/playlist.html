@@ -1,36 +1,38 @@
-<aside>
-    <img src="{{images.0.url}}" alt="{{name}} cover" class="cover" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'">
-    <div class="info">
-        <span title="{{getTotalTracks}} songs">{{getTotalTracks}} tracks</span>
-        <span title="{{getTotalDuration}}">{{getTotalDuration}}</span>
-        <span title="Created by {{owner.display_name}}">{{owner.display_name}}</span>
-    </div>
-    <h2 class="title" title="{{name}}">{{name}}</h2>
-</aside>
-<section class="track-list">
-    {{#tracks.items}}
-    <div class="track-row" data-trackid="{{track.id}}">
-        <div class="cover-overlay">
-            <button class="play">
-                <svg>
-                    <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
-                </svg>
-            </button>
-            <button class="pause">
-                <svg>
-                    <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
-                </svg>
-            </button>
+<div id="{{uri}}">
+    <aside>
+        <img src="{{images.0.url}}" alt="{{name}} cover" class="cover" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'">
+        <div class="info">
+            <span title="{{getTotalTracks}} songs">{{getTotalTracks}} tracks</span>
+            <span title="{{getTotalDuration}}">{{getTotalDuration}}</span>
+            <span title="Created by {{owner.display_name}}">{{owner.display_name}}</span>
         </div>
-        <img src="{{track.album.images.0.url}}" alt="" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'" class="cover">
-        <span class="track-title" title="Title: {{track.name}}">{{track.name}}</span>
-        <span class="track-artist">{{#track.artists}}<a href="#" title="Artist: {{name}}">{{name}}</a> {{/track.artists}}</span>
-        <span class="track-album" title="Album: {{track.album.name}}"><a href="/{{track.album.type}}/{{track.album.id}}">{{track.album.name}}</a></span>
-        <span class="track-duration" title="Duration: {{track.duration}}">{{track.duration}}</span>
-        <span class="track-add-date" title="Date Added: {{added_at}}">{{added_at}}</span>
-    </div>
-    {{/tracks.items}}
-    <div class="track-row end">
-    </div>
-</section>
+        <h2 class="title" title="{{name}}">{{name}}</h2>
+    </aside>
+    <section class="track-list">
+        {{#tracks.items}}
+        <div class="track-row" data-trackid="{{track.id}}" data-position="{{track.position}}">
+            <div class="cover-overlay">
+                <button class="play">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                    </svg>
+                </button>
+                <button class="pause hide">
+                    <svg>
+                        <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                    </svg>
+                </button>
+            </div>
+            <img src="{{track.album.images.0.url}}" alt="" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'" class="cover">
+            <span class="track-title" title="Title: {{track.name}}">{{track.name}}</span>
+            <span class="track-artist">{{#track.artists}}<a href="#" title="Artist: {{name}}">{{name}}</a> {{/track.artists}}</span>
+            <span class="track-album" title="Album: {{track.album.name}}"><a href="/{{track.album.type}}/{{track.album.id}}">{{track.album.name}}</a></span>
+            <span class="track-duration" title="Duration: {{track.duration}}">{{track.duration}}</span>
+            <span class="track-add-date" title="Date Added: {{added_at}}">{{added_at}}</span>
+        </div>
+        {{/tracks.items}}
+        <div class="track-row end">
+        </div>
+    </section>
+</div>
 <!-- <div class="background-image" style="background-image:url('{{images.0.url}}');"></div> -->

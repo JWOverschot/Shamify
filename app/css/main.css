@@ -1,7 +1,41 @@
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    margin-left: -10px;
+    display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #00000000;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(46, 46, 46);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 body {
     font-family: 'Chakra Petch', sans-serif;
     color: var(--white);
     font-size: 18px;
+    margin: 0;
+    background-color: black;
+
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 65px calc(100% - (65px + 250px)) 250px;
+    height: 100vh;
+    overflow: hidden !important;
+    
+    position: initial !important;
+    inset: 0 !important;
 }
 
 a {
@@ -12,4 +46,53 @@ a {
 a:hover {
     color: var(--white);
     text-decoration: underline;
+}
+
+p, h1, h2, h3, h4, h5, h6, span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+svg.svg-filter {
+    width: 0px;
+    height: 0px;
+}
+
+button {
+    background: none;
+    border: none;
+    fill: var(--white);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+button svg {
+    width: 24px;
+    height: 24px;
+}
+
+div.background-image {
+    filter: blur(25px);
+    opacity: 0.5;
+    position: absolute;
+    z-index: -1000;
+    height: 100%;
+    width: 100%;
+    transform: translate(-5%, -5%);
+}
+
+.background-image img {
+    width: 105%;
+    object-fit: cover;
+    height: -webkit-fill-available;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-45%, -45%);
 }

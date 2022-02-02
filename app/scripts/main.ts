@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import * as querystring from 'querystring'
 import { IncomingHttpHeaders, ServerResponse } from 'http'
 import { Helpers } from './helpers'
@@ -11,7 +11,9 @@ import { AlbumTemplate } from './template/models/Album'
 import { PlaylistTemplate } from './template/models/Playlist'
 import { HeaderTemplate } from './template/models/Header'
 import { FooterTemplate } from './template/models/Footer'
-import { platform } from 'custom-electron-titlebar/lib/common/platform'
+//import { platform } from 'custom-electron-titlebar/lib/common/platform'
+//import { platform } from 'custom-electron-titlebar/build/common/platform'
+//import { platform } from 'custom-electron-titlebar/dist/common/platform'
 import { PlayState } from './api/types/playState'
 import { PlayDirection } from './api/types/playDirection'
 import { RepeatState } from './api/types/repeatState'
@@ -75,10 +77,10 @@ function updateAccessToken() {
         }
         request.post(authOptions, (error: any, response: any, body: any) => {
             if (!error && response.statusCode === 200) {
-    
+
                 let access_token = body.access_token
                 let token_expiration = body.expires_in
-    
+
                 store.set('access_token', access_token)
                 store.set('token_expiration', token_expiration)
 
@@ -87,7 +89,7 @@ function updateAccessToken() {
                 if (store.get('token_expiration')) {
                     updateAccessToken()
                 }
-    
+
                 // apiProxy.getUser().then((res: User | Error) => {
                 //     console.log(res)
                 // }).catch((err: Error) => {
@@ -198,7 +200,7 @@ exp.get('/callback', (req: any, res: any) => {
 })
 
 // exp.get('/refresh', (req: any, res: any) => {
-    
+
 // })
 
 exp.get('/pages/header', (req: any, res: any) => {
@@ -355,6 +357,25 @@ exp.post('/change/play-state/:state', (req: any, res: any) => {
     })
 })
 
+exp.post('/change/play-song/:playingfrom/:position', (req: any, res: any) => {
+    let playingFrom: string = req.params.playingfrom
+    let position: number = req.params.position
+
+    let playingObject: Object = {
+        'context_uri': playingFrom, //spotify:album:1YjXJaJ7rB4jiJ8Nt3xP0m
+        'offset': {
+            'position': position
+        },
+        'position_ms': 0
+    }
+
+    apiProxy.setPlayState(PlayState.play, playingObject).then(apiRes => {
+        res.sendStatus(apiRes)
+    }).catch(err => {
+        console.error(err)
+    })
+})
+
 exp.post('/change/track/:direction', (req: any, res: any) => {
     let direction: PlayDirection = req.params.direction
 
@@ -428,6 +449,32 @@ server.listen(8888)
 // }
 
 function createWindow() {
+    // Custom electron titlebar button mappings
+    ipcMain.on('window-minimize', (event) => {
+        const window: BrowserWindow | null = BrowserWindow.fromWebContents(event.sender)
+        if (window != null)
+            window.minimize()
+    })
+
+    ipcMain.on('window-maximize', (event) => {
+        const window: BrowserWindow | null = BrowserWindow.fromWebContents(event.sender)
+        if (window != null)
+            window.isMaximized() ? window.unmaximize() : window.maximize()
+    })
+
+    ipcMain.on('window-close', (event) => {
+        const window: BrowserWindow | null = BrowserWindow.fromWebContents(event.sender)
+        if (window != null)
+            window.close()
+    })
+
+    ipcMain.on('window-is-maximized', (event) => {
+        const window: BrowserWindow | null = BrowserWindow.fromWebContents(event.sender)
+        if (window != null)
+            event.returnValue = window.isMaximized()
+    })
+
+
     const mainWindowStateKeeper = windowStateKeeper({
         defaultHeight: 1100,
         defaultWidth: 1920
@@ -441,10 +488,11 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             plugins: true,
-            enableRemoteModule: true,
-            preload: path.join(__dirname + '../../../dir/js/titleBar.js'),
+            backgroundThrottling: false,
+            contextIsolation: false,
+            //preload: path.join(__dirname + '../../../dir/js/titleBar.js'),
         },
-        frame: false
+        //frame: false
     })
     mainWindowStateKeeper.manage(win)
 

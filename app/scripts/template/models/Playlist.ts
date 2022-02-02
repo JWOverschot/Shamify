@@ -15,6 +15,7 @@ export class PlaylistTemplate {
             this.tracks = playlist.tracks
             this.images = playlist.images
             this.owner = playlist.owner
+            this.uri = playlist.uri
         }
     }
     name: string = 'Playlist'
@@ -35,6 +36,7 @@ export class PlaylistTemplate {
         images: [{ height: null, url: '', width: null }],
         product: 'premium'
     }
+    uri: string = 'spotify:playlist:37i9dQZF1DX7pykHKVxv6o'
     getTotalDuration = (): string => {
         let albumDurationMs = 0
         this.tracks.items.forEach((track: TrackPlaylist) => {

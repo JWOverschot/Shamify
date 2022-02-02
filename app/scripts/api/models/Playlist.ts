@@ -10,5 +10,6 @@ export interface Playlist {
     images: Array<image>,
     snapshot_id: string,
     owner: User,
-    type: string
+    type: string,
+    uri: string
 }

@@ -21,6 +21,7 @@ export class ApiProxy {
     private access_token: string
     private apiURI: string = 'https://api.spotify.com/v1/'
     private helpers: Helpers = new Helpers()
+    private country: string = ''
 
     constructor(access_token: string) {
         this.access_token = access_token
@@ -50,6 +51,7 @@ export class ApiProxy {
                 if (error) {
                     reject(error)
                 } else {
+                    this.country = response.body.country
                     resolve(body)
                 }
             })
@@ -69,7 +71,7 @@ export class ApiProxy {
             }
         }
 
-        return await fetch(this.apiURI + 'albums/' + id, {
+        return await fetch(this.apiURI + 'albums/' + id + '?market=' + this.country, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
@@ -88,8 +90,27 @@ export class ApiProxy {
 
             while (pageCheck && nextLink) {
                 await this.getTracksAlbum(nextLink).then((res) => {
-                    if ('TrackSimp[]' in res.items) {
-                        tracks = tracks.concat(res.items)
+                    if (typeof res.items == typeof tracks) {
+                        let tracksToAdd = new Array<TrackSimp>()
+
+                        // This is temporary solution. Fix with correct data.
+                        res.items.map(item =>{
+                            return <TrackSimp>
+                            {
+                                add_date: item.add_date,
+                                album_name: item.album_name,
+                                artists: item.artists,
+                                duration: '0',
+                                duration_ms: item.duration_ms,
+                                id: item.id,
+                                is_playable: true,
+                                name: item.name,
+                                position: item.position,
+                                track_number: 1
+                            }
+                        })
+
+                        tracks = tracks.concat(tracksToAdd)
                     }
                     // Update page check with new data from new page object
                     pageCheck = (res.total - res.offset) > res.limit
@@ -97,9 +118,14 @@ export class ApiProxy {
                 })
             }
 
-            tracks.forEach(track => {
+            tracks = tracks.filter(
+                track => track.is_playable !== false
+            )
+
+            tracks.forEach((track, index) => {
                 track.duration = this.helpers.formatDurationFromMilliseconds(track.duration_ms)
                 track.add_date = track.add_date
+                track.position = index
             })
 
             data.tracks.items = tracks
@@ -118,7 +144,7 @@ export class ApiProxy {
             }
         }
 
-        return await fetch(this.apiURI + 'playlists/' + id, {
+        return await fetch(this.apiURI + 'playlists/' + id + '?market=' + this.country, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
@@ -144,11 +170,16 @@ export class ApiProxy {
                 })
             }
 
-            tracks.forEach(track => {
+            tracks = tracks.filter(
+                track => track.track.is_playable !== false
+            )
+
+            tracks.forEach((track, index) => {
                 track.track.duration = this.helpers.formatDurationFromMilliseconds(track.track.duration_ms)
                 track.added_at = this.helpers.formatDate(track.added_at, DatePrecision.day)
                 track.track.add_date = track.added_at
                 //playlistDurationMs += track.track.duration_ms
+                track.track.position = index
             })
 
             data.tracks.items = tracks
@@ -265,7 +296,7 @@ export class ApiProxy {
             }
         }
 
-        return await fetch(this.apiURI + 'me/tracks', {
+        return await fetch(this.apiURI + 'me/tracks' + '?market=' + this.country, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
@@ -308,7 +339,7 @@ export class ApiProxy {
         })
     }
 
-    public setPlayState = async (playState: PlayState): Promise<number | Error> => {
+    public setPlayState = async (playState: PlayState, trackToPlay?: Object): Promise<number | Error> => {
         if (!this.access_token) {
             return {
                 name: 'NO_ACCESS_TOKEN',
@@ -316,12 +347,18 @@ export class ApiProxy {
             }
         }
 
+        let requestBody: Object = new Object();
+        if (trackToPlay) {
+            requestBody = trackToPlay;
+        }
+
         return await fetch(this.apiURI + 'me/player/' + playState, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 'Authorization': 'Bearer ' + this.access_token
-            }
+            },
+            body: JSON.stringify(requestBody)
         }).then((res: Response) => {
             if (!res.ok) {
                 throw Error(res.statusText);

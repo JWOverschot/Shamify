@@ -2,6 +2,7 @@ import { ArtistSimp } from './ArtistSimp'
 
 export interface TrackSimp {
     id: string,
+    position: number,
     name: string,
     artists: Array<ArtistSimp>,
     duration_ms: number,

@@ -83,9 +83,11 @@ let loadFooterContent = () => {
 
 let loadBackgroundImage = () => {
     getTrackCover().then((url: string) => {
-        let element = jQuery('#background-content')
+        if (url) {
+            let element = jQuery('#background-content img')
     
-        element[0].style.backgroundImage = `url('${url}')`
+            element[0].attributes.src.value = url
+        }
     })
 }
 
