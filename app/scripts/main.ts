@@ -40,6 +40,8 @@ const stateKey = 'spotify_auth_state'
 const ssl_key = fs.readFileSync(path.join(__dirname + '../../../key.pem'))
 const ssl_cert = fs.readFileSync(path.join(__dirname + '../../../cert.pem'))
 
+let browserWindow: BrowserWindow;
+
 // Initalize apiProxy
 let apiProxy: ApiProxy = new ApiProxy('')
 const helpers: Helpers = new Helpers()
@@ -490,7 +492,6 @@ function createWindow() {
             plugins: true,
             backgroundThrottling: false,
             contextIsolation: false,
-            //preload: path.join(__dirname + '../../../dir/js/titleBar.js'),
         },
         //frame: false
     })
@@ -564,7 +565,7 @@ function createWindow() {
     // win.on('closed', function () {
     // 	win = null
     // })
-    return win
+    return browserWindow = win;
 }
 
 app.on('ready', createWindow)
@@ -584,12 +585,20 @@ app.on('browser-window-focus', function () {
         console.log("F5 is pressed: Shortcut Disabled");
     });
     //TODO: Something with media keys
-    // globalShortcut.register('MediaPlayPause', () => {
-
-    // });
+    /**
+     * https://www.electronjs.org/docs/latest/api/global-shortcut
+     * The following accelerators will not be registered successfully on macOS 10.14 Mojave unless the app has been authorized as a trusted accessibility client:
+     * "Media Play/Pause"
+     * "Media Next Track"
+     * "Media Previous Track"
+     * "Media Stop"
+     */
+    globalShortcut.register('MediaPlayPause', () => {
+        console.log("Media key");
+    });
 });
 
 app.on('browser-window-blur', function () {
     globalShortcut.unregister('CommandOrControl+R');
     globalShortcut.unregister('F5');
-});
+});app
