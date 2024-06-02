@@ -20,7 +20,7 @@ footer section.information-overlay {
 
     display: grid;
     grid-template-columns: 250px auto;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 33.33% 33.33% 33.33%;
     column-gap: 17px;
 }
 
@@ -28,71 +28,95 @@ footer section.information-overlay section.controls {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 1;
-    grid-row-end: 3;
+    grid-row-end: 4;
+    display: grid;
 
     background-color: rgba(var(--black-rgb), .5);
-    position: relative;
     z-index: 2;
-    display: flex;
-    opacity: 0;
+    /* opacity: 0; */
     transition-delay: 10ms;
     transition-duration: .3s;
     transition-timing-function: ease-in-out;
+}
+
+footer section.information-overlay section.controls button.full-screen {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    
+    display: flex;
+    z-index: 3;
+    flex-direction: row-reverse;
+    margin: 10px;
+}
+
+footer section.information-overlay section.controls button.full-screen svg {
+    filter: url(#inset-shadow-arrow-expand);
+}
+
+footer section.information-overlay section.media-controls {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 4;
+
+    position: relative;
+    display: flex;
 }
 
 footer section.information-overlay section.controls:hover {
     opacity: 1;
 }
 
-
-footer section.information-overlay section.controls button {
+footer section.information-overlay section.media-controls button {
     align-self: center;
 }
 
-footer section.information-overlay section.controls button.back,
-footer section.information-overlay section.controls button.next {
+footer section.information-overlay section.media-controls button.back,
+footer section.information-overlay section.media-controls button.next {
     height: 88px;
     width: 88px;
     margin: 0 -7px;
 }
 
-footer section.information-overlay section.controls button.back {
+footer section.information-overlay section.media-controls button.back {
     transform: rotate(180deg);
 }
 
-footer section.information-overlay section.controls button.play.hide,
-footer section.information-overlay section.controls button.pause.hide {
+footer section.information-overlay section.media-controls button.play.hide,
+footer section.information-overlay section.media-controls button.pause.hide {
     display: none;
 }
 
-footer section.information-overlay section.controls button.play.show,
-footer section.information-overlay section.controls button.pause.show {
+footer section.information-overlay section.media-controls button.play.show,
+footer section.information-overlay section.media-controls button.pause.show {
     display: initial;
 }
 
-footer section.information-overlay section.controls button.play,
-footer section.information-overlay section.controls button.pause {
+footer section.information-overlay section.media-controls button.play,
+footer section.information-overlay section.media-controls button.pause {
     width: 150px;
     height: 150px;
     margin: 0 -25px;
 }
 
-footer section.information-overlay section.controls button.back svg,
-footer section.information-overlay section.controls button.next svg {
+footer section.information-overlay section.media-controls button.back svg,
+footer section.information-overlay section.media-controls button.next svg {
     height: 88px;
     width: 88px;
 }
 
-footer section.information-overlay section.controls button.back svg {
+footer section.information-overlay section.media-controls button.back svg {
     filter: url(#inset-shadow-back);
 }
 
-footer section.information-overlay section.controls button.next svg {
+footer section.information-overlay section.media-controls button.next svg {
     filter: url(#inset-shadow-next);
 }
 
-footer section.information-overlay section.controls button.play svg,
-footer section.information-overlay section.controls button.pause svg {
+footer section.information-overlay section.media-controls button.play svg,
+footer section.information-overlay section.media-controls button.pause svg {
     width: 150px;
     height: 150px;
     filter: url(#inset-shadow-play-pause);

@@ -1,26 +1,33 @@
 <script src="/js/view/footer/footer.js"></script>
 <section class="information-overlay">
     <section class="controls">
-        <button class="back">
+        <button class="full-screen">
             <svg>
-                <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
+                <use xlink:href="../media/symbol-defs.svg#arrow-expand-24px"></use>
             </svg>
         </button>
-        <button class="play {{getPlayClass}}">
-            <svg>
-                <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
-            </svg>
-        </button>
-        <button class="pause {{getPauseClass}}">
-            <svg>
-                <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
-            </svg>
-        </button>
-        <button class="next">
-            <svg>
-                <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
-            </svg>
-        </button>
+        <section class="media-controls">
+            <button class="back">
+                <svg>
+                    <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
+                </svg>
+            </button>
+            <button class="play {{getPlayClass}}">
+                <svg>
+                    <use xlink:href="../media/symbol-defs.svg#icon-play_arrow-24px"></use>
+                </svg>
+            </button>
+            <button class="pause {{getPauseClass}}">
+                <svg>
+                    <use xlink:href="../media/symbol-defs.svg#icon-pause-24px"></use>
+                </svg>
+            </button>
+            <button class="next">
+                <svg>
+                    <use xlink:href="../media/symbol-defs.svg#icon-skip_next-24px"></use>
+                </svg>
+            </button>
+        </section>
     </section>
     <img src="{{item.album.images.0.url}}" alt="" onerror="this.onerror=null; this.src='https://nl.concerty.com/img/no_cover.png'" class="cover">
     <div class="overlay-top" data-trackid="{{item.id}}">

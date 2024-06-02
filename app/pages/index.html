@@ -92,6 +92,26 @@
             <!-- Put shadow over original object -->
             <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
         </filter>
+        <filter id="inset-shadow-arrow-expand">
+          <!-- Shadow Offset -->
+          <feOffset dx="1" dy="2"></feOffset>
+
+          <!-- Shadow Blur -->
+          <feGaussianBlur stdDeviation="2" result="offset-blur"></feGaussianBlur>
+
+          <!-- Invert the drop shadow to create an inner shadow -->
+          <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse">
+          </feComposite>
+
+          <!-- Color & Opacity -->
+          <feFlood flood-color="black" flood-opacity=".25" result="color"></feFlood>
+
+          <!-- Clip color inside shadow -->
+          <feComposite operator="in" in="color" in2="inverse" result="shadow"></feComposite>
+
+          <!-- Put shadow over original object -->
+          <feComposite operator="over" in="shadow" in2="SourceGraphic"></feComposite>
+      </filter>
     </svg>
     <main id="main-main"></main>
     <footer id="main-footer"></footer>

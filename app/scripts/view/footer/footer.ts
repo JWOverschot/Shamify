@@ -93,6 +93,14 @@ footerButtons.ready(() => {
             })
     }
 
+    let toggleFullScreen = (element: any) => {
+        if (jQuery('#fullscreen-css').length > 0) {
+            jQuery('#fullscreen-css').remove();
+        } else {
+            jQuery('head').append('<link id="fullscreen-css" rel="stylesheet" type="text/css" href="../../css/fullscreen.css">');
+        }
+    }
+
     // Footer buttons listners
     jQuery('#main-footer button.play').off('click')
     jQuery('#main-footer button.play').on('click', () => {
@@ -114,6 +122,8 @@ footerButtons.ready(() => {
     jQuery('#main-footer button.suffle').on('click', (ele: any) => { toggleShuffle(ele) })
     jQuery('#main-footer button.repeat').off('click')
     jQuery('#main-footer button.repeat').on('click', (ele: any) => { toggleRepeat(ele) })
+    jQuery('#main-footer button.full-screen').off('click')
+    jQuery('#main-footer button.full-screen').on('click', (ele: any) => { toggleFullScreen(ele) })
 })
 
 const progressBar = jQuery('#main-footer .progress-bar')
