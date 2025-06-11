@@ -18,8 +18,12 @@
     "url": "https://github.com/JWOverschot/Shamify/issues"
   },
   "homepage": "https://github.com/JWOverschot/Shamify#readme",
+  "engines": {
+    "node": ">=9.0.0 <9.11.2"
+  },
   "devDependencies": {
     "electron": "^16.0.8",
+    "electron-rebuild": "^3.2.9",
     "typescript": "^4.5.5"
   },
   "dependencies": {

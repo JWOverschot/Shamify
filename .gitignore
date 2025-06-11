@@ -65,3 +65,9 @@ dir/
 
 # ignore client secret
 app/scripts/client-keys.ts
+
+# ignore certificate files
+*.pem
+
+# Ignore build output
+build/

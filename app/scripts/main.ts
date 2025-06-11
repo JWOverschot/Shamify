@@ -593,9 +593,9 @@ app.on('browser-window-focus', function () {
      * "Media Previous Track"
      * "Media Stop"
      */
-    globalShortcut.register('MediaPlayPause', () => {
-        console.log("Media key");
-    });
+    // globalShortcut.register('MediaPlayPause', () => {
+    //     console.log("Media key");
+    // });
 });
 
 app.on('browser-window-blur', function () {
