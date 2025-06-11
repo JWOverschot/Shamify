@@ -19,6 +19,8 @@ import { PlayDirection } from './api/types/playDirection'
 import { RepeatState } from './api/types/repeatState'
 import { PagingPlaylist } from './api/types/pagingPlaylist'
 
+import './media-keys.js'
+
 const { client } = require('./client-keys')
 const express = require('express')
 const cors = require('cors')
