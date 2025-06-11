@@ -501,7 +501,9 @@ function createWindow() {
 
     // and load the index.html of the app.
     //win.loadFile('./app/pages/index.html')
-    win.loadURL(base_uri + 'login')
+    win.loadURL(base_uri)
+    // Force login page to be loaded
+    //win.loadURL(base_uri + 'login')
 
 
     win.on('closed', function () {
